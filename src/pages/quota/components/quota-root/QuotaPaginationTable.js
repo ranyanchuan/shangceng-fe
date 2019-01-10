@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
 import PaginationTable from 'components/PaginationTable'
+import {BpmButtonSubmit,BpmButtonRecall} from 'yyuap-bpm';
 import { actions } from 'mirrorx';
 import { Button,Message,Modal, Loading } from 'tinper-bee';
 import Select from 'bee-select';
 import moment from "moment/moment";
 import Header from 'components/Header';
 import QuotaForm from '../quota-form';
+import AcExport from '../quota-export';
+import AcUpload from 'ac-upload';
+import 'ac-upload/build/ac-upload.css';
 import './index.less'
 export default class QuotaPaginationTable extends Component {
     constructor(props){
@@ -235,7 +239,55 @@ export default class QuotaPaginationTable extends Component {
             delData:[]
         })
     }
+    // 模板下载
+    onLoadTemplate = () => {
+        window.open(`${GROBAL_HTTP_CTX}/quota/excelTemplateDownload`)
+    }
 
+    // 导入成功回调函数
+    handlerUploadSuccess = (data)=>{
+        // 导入成功后，列表加载数据
+        Message.create({content: '导入数据成功', color: 'success'});
+        actions.quota.loadList();
+    }
+
+    // 导入删除回调函数
+    handlerUploadDelete = (file) => {
+
+    }
+
+    // 导出
+    exportExcel = () =>{
+        //actions.quota.exportExcel(this.queryParams);
+        let { selectData } = this.state;
+        if(selectData.length > 0) {
+            actions.quota.exportExcel({
+                dataList : selectData
+            });
+        }else {
+            Message.create({ content: '请选择导出数据', color : 'danger'  });
+        }
+    }
+
+    // 打印数据
+    printExcel = ()=>{
+        if(!this.state.selectData.length)  
+        {
+            Message.create({ content: '请选择需打印的数据', color : 'danger'  });
+            return;
+        }
+        actions.quota.printExcel({
+            queryParams:
+            {
+                funccode: 'quota',
+                nodekey: '002'
+            },
+            printParams: 
+            {
+                id:this.state.selectData[0].id
+            }
+        });
+    }
 
     // 动态设置列表滚动条x坐标
     getCloumnsScroll = (columns) => {
@@ -260,9 +312,49 @@ export default class QuotaPaginationTable extends Component {
                     <Button colors="primary" style={{"marginLeft":15}} size='sm' onClick={() => { self.cellClick({},0) }}>
                     新增
                     </Button>
+                    <BpmButtonSubmit
+                            className="ml5 "
+                            checkedArray = {selectData}
+                            funccode = "quota"
+                            nodekey = "003"
+                            url = {`${GROBAL_HTTP_CTX}/quota/submit`}
+                            urlAssignSubmit={`${GROBAL_HTTP_CTX}/quota/assignSubmit`}
+                            onSuccess = {this.onSubmitSuc}
+                            onError = {this.onSubmitFail}
+                            onStart={this.onSubmitStart}
+                            onEnd={this.onSubmitEnd}
+                    >
+                        <Button size='sm' style={{"marginLeft":"15px"}} className="admin"  colors="primary">提交</Button>
+                    </BpmButtonSubmit>
+                    <BpmButtonRecall
+                            className="ml5 "
+                            checkedArray = {selectData}
+                            url = {`${GROBAL_HTTP_CTX}/quota/recall`}
+                            onSuccess = {this.onRecallSuc}
+                            onError = {this.onRecallFail}
+                            onStart = {this.onRecallStart}
+                            onEnd={this.onSubmitEnd}
+                    >
+                        <Button size='sm' style={{"marginLeft":"15px"}} className="admin"  colors="primary">收回</Button>
+                    </BpmButtonRecall>
                    
 
+                    <Button colors="primary" className="ml5" size='sm' onClick={() => { self.printExcel() }}>
+                        打印
+                    </Button>
 
+                    <Button colors="primary" className="ml5" size='sm' onClick={ self.onLoadTemplate}>模板下载</Button>
+                    <AcUpload
+                        title={"导入"}
+                        action={`${GROBAL_HTTP_CTX}/quota/toImportExcel`}
+                        multiple={false}
+                        onError={() => console.log('上传报错了')}
+                        onSuccess={self.handlerUploadSuccess}
+                        onDelete={ self.handlerUploadDelete}
+                    >
+                        <Button className="ml5" colors="primary" size='sm'>导入</Button>
+                    </AcUpload>
+                    <AcExport {...exportProps} className="ml5"/>
                 </div>
                 <PaginationTable
                         data={list}

@@ -4,6 +4,7 @@ import { actions } from "mirrorx";
 import queryString from 'query-string';
 import { Switch, InputNumber,Loading, Table, Button, Col, Row, Icon, InputGroup, FormControl, Checkbox, Modal, Panel, PanelGroup, Label, Message } from "tinper-bee";
 import Radio from 'bee-radio';
+import { BpmTaskApprovalWrap } from 'yyuap-bpm';
 import Header from "components/Header";
 import options from "components/RefOption";
 import DatePicker from 'bee-datepicker';
@@ -98,6 +99,65 @@ class Edit extends Component {
         return titleArr[btnFlag]||'新增';
     }
 
+    // 跳转到流程图
+    onClickToBPM = (rowData) => {
+        console.log("actions", actions);
+        actions.routing.push({
+            pathname: 'quota-chart',
+            search: `?id=${rowData.id}`
+        })
+    }
+
+    // 流程图相关回调函数
+    onBpmStart = () => {
+        actions.quota.updateState({ showLoading: true });
+    }
+    onBpmEnd = () => {
+        actions.quota.updateState({ showLoading: false });
+    }
+    onBpmSuccess = () => {
+          window.setTimeout(()=>{
+                    actions.quota.updateState({ showLoading: false });
+                    // actions.routing.push('pagination-table');
+                    actions.routing.goBack();
+                },1000);
+    }
+    onBpmError = () => {
+        actions.quota.updateState({ showLoading: false });
+    }
+
+    // 审批面板展示
+    showBpmComponent = (btnFlag, appType, id, processDefinitionId, processInstanceId, rowData) => {
+        // btnFlag为2表示为详情
+        if ((btnFlag == 2) && rowData && rowData['id']) {
+            console.log("showBpmComponent", btnFlag)
+            return (
+                <div >
+                    {appType == 1 &&<BpmTaskApprovalWrap
+                        id={rowData.id}
+                        onBpmFlowClick={() => { this.onClickToBPM(rowData) }}
+                        appType={appType}
+                        onStart={this.onBpmStart}
+                        onEnd={this.onBpmEnd}
+                        onSuccess={this.onBpmSuccess}
+                        onError={this.onBpmError}
+                    />}
+                    {appType == 2 &&<BpmTaskApprovalWrap
+                        id={id}
+                        processDefinitionId={processDefinitionId}
+                        processInstanceId={processInstanceId}
+                        onBpmFlowClick={() => { this.onClickToBPM(rowData) }}
+                        appType={appType}
+                        onStart={this.onBpmStart}
+                        onEnd={this.onBpmEnd}
+                        onSuccess={this.onBpmSuccess}
+                        onError={this.onBpmError}
+                    />}
+                </div>
+
+            );
+        }
+    }
 
     arryDeepClone = (array)=>{
         let result = [];
@@ -139,6 +199,9 @@ class Edit extends Component {
                         </div>
                     ) : ''}
                 </Header>
+                {
+                    self.showBpmComponent(btnFlag, appType ? appType : "1", id, processDefinitionId, processInstanceId, rowData)
+                }
                 <Row className='detail-body'>
 
                             <Col md={4} xs={6}>

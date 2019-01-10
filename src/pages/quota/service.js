@@ -1,4 +1,5 @@
 import request from "utils/request";
+import axios from "axios";
 //定义接口地址
 const URL = {
     "GET_DETAIL":  `${GROBAL_HTTP_CTX}/quota/list`,
@@ -6,7 +7,11 @@ const URL = {
     "GET_LIST":  `${GROBAL_HTTP_CTX}/quota/list`,
     "DEL_ORDER":  `${GROBAL_HTTP_CTX}/quota/deleteBatch`,
 
+    // 打印
+    "GET_QUERYPRINTTEMPLATEALLOCATE":  `/eiap-plus/appResAllocate/queryPrintTemplateAllocate`,
+    "PRINTSERVER": '/print_service/print/preview',
 
+    "GET_TOEXPORTEXCEL":  `${GROBAL_HTTP_CTX}/quota/toExportExcel`,
 }
 
 /**
@@ -77,4 +82,60 @@ export const getDetail = (params) => {
         method: "get",
         param: params
     });
+}
+// 打印
+
+export const queryPrintTemplateAllocate = (params) => {
+    return request(URL.GET_QUERYPRINTTEMPLATEALLOCATE, {
+        method: "get",
+        param: params
+    });    
+    
+}
+
+export const printExcel = (params) => {
+
+    let search = [];
+    for(let key in params){
+        search.push(`${key}=${params[key]}`)
+    }
+    let exportUrl = `${URL.PRINTSERVER}?${search.join('&')}`;
+    console.log(exportUrl);
+    window.open(exportUrl);     
+    
+}
+/**
+ * 导出
+ */
+export const exportExcel = (params) => {
+    exportData(URL.GET_TOEXPORTEXCEL, params.dataList);
+}
+
+const selfURL = window[window.webkitURL ? 'webkitURL' : 'URL'];
+let exportData = (url,data) => {
+    axios({
+        method : 'post',
+        url : url,
+        data : data,
+        responseType : 'blob'
+    }).then((res) => {
+        const content = res.data;
+        const blob = new Blob([content]);
+        const fileName = "导出数据.xls";
+
+        let elink = document.createElement('a');
+        if('download' in elink) {
+            elink.download = fileName;
+            elink.style.display = 'none';
+            elink.href = selfURL['createObjectURL'](blob);
+            document.body.appendChild(elink);
+
+            // 触发链接
+            elink.click();
+            selfURL.revokeObjectURL(elink.href);
+            document.body.removeChild(elink)
+        } else {
+            navigator.msSaveBlob(blob, fileName);
+        }
+    })
 }

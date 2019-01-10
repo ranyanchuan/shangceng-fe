@@ -152,7 +152,21 @@ export default {
             return content[0];
         },
 
+        async printExcel(param) {
+            let res=processData(await api.queryPrintTemplateAllocate(param.queryParams),'');
+            if(!res || !res.res_code) return false;
+            await api.printExcel({
+                tenantId: 'tenant',
+                printcode: res.res_code,
+                serverUrl: `${GROBAL_HTTP_CTX}/quota/dataForPrint`,
+                params: encodeURIComponent(JSON.stringify(param.printParams)),
+                sendType: 'post'
+            })
+        },
         
+        async exportExcel(param) {
+            api.exportExcel(param || {});
+        },
 
 
     }
