@@ -32,7 +32,6 @@ class Quote extends Component {
     render() {
         const _this = this;
         const {subjectObj,subjectModalObj, partObj,quoteIndex,partIndex, quoteList}=_this.props;
-        console.count("111")
 
         return (
             <div className='quote'>
