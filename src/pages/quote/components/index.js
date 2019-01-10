@@ -3,6 +3,7 @@ import {actions} from 'mirrorx';
 import {Icon, Loading,Row,Col} from 'tinper-bee';
 // import Grid from 'components/Grid';
 
+import Part from './Part'
 
 // import 'bee-complex-grid/build/Grid.css';
 // import 'bee-pagination/build/Pagination.css'
@@ -36,7 +37,9 @@ class Quote extends Component {
                     <Row>
                         <Col md={4} xs={8} sm={12}>
                             <div className='create-name'>4</div>
-                            <div className='create-part'>4</div>
+                            <div className='create-part'>
+                                <Part/>
+                            </div>
                         </Col>
                         <Col md={8} xs={8} sm={12}>
                             <div className='create-project'>这是项目</div>
