@@ -6,6 +6,7 @@ import { Route } from 'mirrorx'
 import {
     ConnectedQuotaPaginationTable,
     ConnectedQuotaEdit,
+    ConnectedQuotaBpmChart
 } from '../../container'
 
 
@@ -27,5 +28,6 @@ export default ({ match }) => (
         {/*配置节点路由*/}
         <Route  path={`${match.url}Quota-table`} component={ConnectedQuotaPaginationTable} />
         <Route  path={`${match.url}Quota-edit`} component={ConnectedQuotaEdit} />
+        <Route  path={`${match.url}Quota-chart`} component={ConnectedQuotaBpmChart} />
     </div>
 )
