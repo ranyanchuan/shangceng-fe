@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { actions } from "mirrorx";
 import { Button, Table, FormControl } from "tinper-bee";
 import Grid from "components/Grid";
-import { deepClone, uuid } from "utils";
 
 import "bee-complex-grid/build/Grid.css";
 import "bee-pagination/build/Pagination.css";
