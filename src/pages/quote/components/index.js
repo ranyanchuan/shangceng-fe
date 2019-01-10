@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {actions} from 'mirrorx';
 import {Icon, Loading,Row,Col} from 'tinper-bee';
 // import Grid from 'components/Grid';
+import Subject from './Subject';
+
 
 import Part from './Part'
 
@@ -29,20 +31,22 @@ class Quote extends Component {
     render() {
         const _this = this;
         console.log("======")
+        const {subjectObj, partObj}=_this.props;
+
 
         return (
             <div className='quote'>
                 <div className="query-name">创建项目</div>
                 <div>
                     <Row>
-                        <Col md={4} xs={8} sm={12}>
+                        <Col md={4} xs={12} sm={12}>
                             <div className='create-name'>4</div>
                             <div className='create-part'>
-                                <Part/>
+                                <Part partObj={partObj}/>
                             </div>
                         </Col>
-                        <Col md={8} xs={8} sm={12}>
-                            <div className='create-project'>这是项目</div>
+                        <Col md={8} xs={12} sm={12}>
+                            <Subject subjectObj={subjectObj}></Subject>
                         </Col>
                     </Row>
                 </div>
