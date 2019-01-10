@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {actions} from 'mirrorx';
-import {Icon, Loading,Row,Col,Button} from 'tinper-bee';
+import {Icon, Loading,Row,Col,Button, Select, FormControl } from 'tinper-bee';
 // import Grid from 'components/Grid';
 import Subject from './Subject';
 
@@ -35,7 +35,30 @@ class Quote extends Component {
 
         return (
             <div className='quote'>
-                <div className="query-name">创建项目</div>
+                <div className="pro-info">
+                    <Row>
+                        <Col md={4} xs={12} sm={12}>
+                            客户名称：
+                            <Select
+                                defaultValue="lucy"
+                                style={{ width: 200 }}
+                                // onChange={this.handleChange}
+                                >
+                            <Option value="jack">boyuzhou</Option>
+                            <Option value="lucy">renhualiu</Option>
+                            <Option value="yiminghe">yuzhao</Option>
+                            </Select>
+                        </Col>
+                        <Col md={4} xs={12} sm={12}>
+                            设计中心：
+                            <FormControl readonly={true} />
+                        </Col>
+                        <Col md={4} xs={12} sm={12}>
+                            项目地址：
+                            <FormControl />
+                        </Col>
+                    </Row>
+                </div>
                 <div>
                     <Row className="btns-row">
                         <Col md={12} xs={12} sm={12}>
