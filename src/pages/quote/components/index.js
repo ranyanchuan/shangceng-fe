@@ -30,7 +30,7 @@ class Quote extends Component {
     render() {
         const _this = this;
         console.log("======")
-        const {subjectObj}=_this.props;
+        const {subjectObj,subjectModalObj}=_this.props;
 
         return (
             <div className='quote'>
@@ -42,7 +42,9 @@ class Quote extends Component {
                             <div className='create-part'>4</div>
                         </Col>
                         <Col md={8} xs={12} sm={12}>
-                            <Subject subjectObj={subjectObj}></Subject>
+                            <Subject
+                                subjectObj={subjectObj}
+                                subjectModalObj={subjectModalObj}/>
                         </Col>
                     </Row>
                 </div>
