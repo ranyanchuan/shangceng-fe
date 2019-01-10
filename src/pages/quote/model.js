@@ -28,6 +28,7 @@ export default {
     // 设置当前 Model 所需的初始化 state
     initialState: {
         showLoading: false,
+        quoteList:[],
         partObj: {
             list: [],
             partVal: ''
@@ -54,6 +55,31 @@ export default {
         }
     },
     effects: {
+        //创建报价
+        async createQuote(data,getState){
+            const quoteList = deepClone(getState().quote.quoteList);
+            const length = quoteList.length;
+            if(length == 0){
+                quoteList.push({
+                    id:1,
+                    quoteName:`第${length+1}次报价`,
+                    quoteAmount:0,
+                    status:0
+                });
+            }else{
+                quoteList.push({
+                    id:length+1,
+                    quoteName:`第${length+1}次报价`,
+                    quoteAmount:0,
+                    status:0
+                })
+            }
+            actions.quote.updateState({
+                quoteList
+            })
+
+        },
+
         //部位输入框
         async partValChange(data, getState) {
             const partObj = deepClone(getState().quote.partObj);

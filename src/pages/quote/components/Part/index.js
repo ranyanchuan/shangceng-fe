@@ -72,8 +72,7 @@ class Part extends Component {
             参考其他部位
           </Button>
           <Button
-            shape="border"
-            colors="success"
+            colors="primary"
             size="sm"
             onClick={() => actions.quote.addPart()}
           >
