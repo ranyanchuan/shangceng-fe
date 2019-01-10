@@ -22,6 +22,13 @@ export default {
     // 设置当前 Model 所需的初始化 state
     initialState: {
         showLoading:false,
+        subjectObj: {
+            list: [],
+            pageIndex: 0,
+            pageSize: 10,
+            totalPages: 0,
+            total: 0,
+        },
     },
     reducers: {
         /**
