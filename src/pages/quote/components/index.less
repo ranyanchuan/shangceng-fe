@@ -1,7 +1,11 @@
 .quote{
   .btns-row{
     padding: 10px;
-    button{
+    border: 1px solid #e5e6e9;
+    border-radius: 3px;
+    box-shadow: 0 2px 6px hsla(0,0%,78%,.4);
+    margin-bottom: 16px;
+    button:not(:first-child){
       margin-left: 25px;
     }
   }
@@ -12,13 +16,36 @@
   }
   .create-name{
     min-height: 155px;
+    border: 1px solid #e5e6e9;
+    -webkit-box-shadow: 0 2px 6px hsla(0,0%,78%,.4);
+    box-shadow: 0 2px 6px hsla(0,0%,78%,.4);
+    border-radius: 2px;
+    margin-bottom: 16px;
   }
   .create-part{
     overflow: hidden;
     min-height: 80px;
+    border: 1px solid #e5e6e9;
+    -webkit-box-shadow: 0 2px 6px hsla(0,0%,78%,.4);
+    box-shadow: 0 2px 6px hsla(0,0%,78%,.4);
+    border-radius: 2px;
+    margin-bottom: 16px;
+
+
   }
   .create-project{
-    height: 160px;
-    background-color: #7ed321;
+    .table-header{
+      margin: 0px;
+    }
+    .desc{
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #e5e6e9;
+      padding: 8px;
+      .end{
+        margin-right: 15px;
+      }
+    }
   }
+
 }

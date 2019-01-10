@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {actions} from 'mirrorx';
-import {Icon, Loading, Button,Info} from 'tinper-bee';
+import {Icon, Loading, Button, Info} from 'tinper-bee';
 import Grid from 'components/Grid';
 import Alert from 'components/Alert';
 import FactoryComp from './FactoryComp';
@@ -13,14 +13,13 @@ import 'bee-table/build/Table.css';
 import 'bee-input-number/build/InputNumber.css';
 import './index.less';
 
-
 class Subject extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            addSubModalVisible:false,
-            showPopAlert:false,
-            selectData:[],
+            addSubModalVisible: false,
+            showPopAlert: false,
+            selectData: [],
         }
     }
 
@@ -30,33 +29,33 @@ class Subject extends Component {
     // }
 
 
-    onCheckSubject=()=>{
-        this.setState({addSubModalVisible:true});
+    onCheckSubject = () => {
+        this.setState({addSubModalVisible: true});
     }
 
-    onCloseModal=()=>{
-        this.setState({addSubModalVisible:false});
+    onCloseModal = () => {
+        this.setState({addSubModalVisible: false});
     }
 
-    changeAllData=(field, value, index)=>{
-        console.log("field, value, index",field, value, index);
+    changeAllData = (field, value, index) => {
+        console.log("field, value, index", field, value, index);
     }
 
-    getSelectedDataFunc=(selectData)=>{
-        this.setState({ selectData });
+    getSelectedDataFunc = (selectData) => {
+        this.setState({selectData});
     }
 
-    onClickDelConfirm=()=>{
-        const { selectData } = this.state;
+    onClickDelConfirm = () => {
+        const {selectData} = this.state;
         if (selectData.length === 0) {
             Info('请勾选数据后再删除');
         } else {
-            this.setState({ showPopAlert: true });
+            this.setState({showPopAlert: true});
         }
     }
 
 
-    onClickCell=()=>{
+    onClickCell = () => {
         console.log("=====")
     }
 
@@ -67,9 +66,9 @@ class Subject extends Component {
      * @memberof Order
      */
     async confirmDel(type) {
-        this.setState({ showPopAlert: false });
+        this.setState({showPopAlert: false});
         if (type === 1) { // 确定
-            const { selectData, searchId } = this.state;
+            const {selectData, searchId} = this.state;
             // if (this.clearOldData()) {
             //     const { status } = await actions.masterDetailOne.delOrderDetail(selectData);
             //     if (status === "success") {
@@ -78,9 +77,8 @@ class Subject extends Component {
             //     }
             // }
         }
-        this.setState({ showPopAlert: false });
+        this.setState({showPopAlert: false});
     }
-
 
 
     detailColumn = [
@@ -151,13 +149,13 @@ class Subject extends Component {
             title: "操作",
             dataIndex: "action",
             key: "action",
-            fixed:"right",
+            fixed: "right",
             width: 60,
             render(text, record, index) {
-                const _this=this;
+                const _this = this;
                 return (
                     <div className='operation-btn'>
-                        <i size='sm' className='uf-del' onClick={() => {
+                        <i size='sm' className='uf uf-del' onClick={() => {
                             _this.onClickCell(record)
                         }}></i>
                     </div>
@@ -170,8 +168,8 @@ class Subject extends Component {
 
     render() {
         const _this = this;
-        const {subjectObj,subjectModalObj} = _this.props;
-        const {addSubModalVisible,showPopAlert}=_this.state;
+        const {subjectObj, subjectModalObj} = _this.props;
+        const {addSubModalVisible, showPopAlert} = _this.state;
 
         const paginationObj = {   // 分页
             horizontalPosition: "right",
@@ -181,40 +179,48 @@ class Subject extends Component {
             items: subjectObj.totalPages,
             freshData: _this.freshData,
             onDataNumSelect: _this.onDataNumSelect,
-            showJump:false,
+            showJump: false,
             dataNum: 1,
         }
 
         return (
             <div className='subject'>
-                <div className='table-header'>
-                    <Button shape="border" colors="success" size="sm"
-                            onClick={this.onCheckSubject}
-                    >
-                        新增项目
-                    </Button>
-                    <Button
-                        shape="border"
-                        colors="danger"
-                        size="sm"
-                        className="del-btn"
-                        onClick={this.onClickDelConfirm}
-                    >
-                        批量删除
-                    </Button>
-                    <Alert
-                        show={showPopAlert}
-                        context="是否要删除 ?"
-                        confirmFn={() => {
-                            _this.confirmDel(1)
-                        }}
-                        cancelFn={() => {
-                            _this.confirmDel(2)
-                        }}
-                    />
+                <div className="subject-header">
+                    <div className="desc">
+                        <div>第一次报价</div>
+                        <div>总额 11000.00元</div>
+                        <div>工程造价 11000.00元</div>
+                        <div>管理费 11000.00元</div>
+                        <div className="end">税金 110.00元</div>
+                    </div>
+                    <div className='table-header'>
+                        <Button shape="border" colors="success" size="sm"
+                                onClick={this.onCheckSubject}
+                        >
+                            新增项目
+                        </Button>
+                        <Button
+                            shape="border"
+                            colors="danger"
+                            size="sm"
+                            className="del-btn"
+                            onClick={this.onClickDelConfirm}
+                        >
+                            批量删除
+                        </Button>
+                        <Alert
+                            show={showPopAlert}
+                            context="是否要删除 ?"
+                            confirmFn={() => {
+                                _this.confirmDel(1)
+                            }}
+                            cancelFn={() => {
+                                _this.confirmDel(2)
+                            }}
+                        />
+                    </div>
                 </div>
                 <Grid
-                    id="===="
                     data={subjectObj.list}
                     rowKey={(r, i) => r.index}
                     columns={this.detailColumn}

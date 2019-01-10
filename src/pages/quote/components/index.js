@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {actions} from 'mirrorx';
-import {Icon, Loading,Row,Col,Button} from 'tinper-bee';
+import {Icon, Loading, Row, Col, Button} from 'tinper-bee';
 // import Grid from 'components/Grid';
 import Subject from './Subject';
 
@@ -18,9 +18,7 @@ import './index.less';
 class Quote extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        }
+        this.state = {}
     }
 
 
@@ -31,20 +29,18 @@ class Quote extends Component {
 
     render() {
         const _this = this;
-        const {subjectObj,subjectModalObj, partObj,quoteIndex,partIndex, quoteList}=_this.props;
+        const {subjectObj, subjectModalObj, partObj, quoteIndex, partIndex, quoteList} = _this.props;
 
         return (
             <div className='quote'>
                 <div className="query-name">创建项目</div>
                 <div>
-                    <Row className="btns-row">
-                        <Col md={12} xs={12} sm={12}>
-                            <Button colors="primary" size="sm" onClick={() => actions.quote.createQuote()} >创建报价</Button>
-                            <Button colors="primary" size="sm" >参考其他项目报价</Button>
-                            <Button colors="primary" size="sm" >提交报价</Button>
-                            <Button colors="primary" size="sm" >打印报价</Button>
-                        </Col>
-                    </Row>
+                    <div className="btns-row">
+                        <Button colors="primary" size="sm" onClick={() => actions.quote.createQuote()}>创建报价</Button>
+                        <Button colors="primary" size="sm">参考其他项目报价</Button>
+                        <Button colors="primary" size="sm">提交报价</Button>
+                        <Button colors="primary" size="sm">打印报价</Button>
+                    </div>
                     <Row>
                         <Col md={4} xs={12} sm={12}>
                             <div className='create-name'>
@@ -54,11 +50,14 @@ class Quote extends Component {
                                 <Part partObj={partObj} partIndex={partIndex}/>
                             </div>
                         </Col>
-                        {/*<Col md={8} xs={12} sm={12}>*/}
-                            {/*<Subject*/}
-                                {/*subjectObj={subjectObj}*/}
-                                {/*subjectModalObj={subjectModalObj}/>*/}
-                        {/*</Col>*/}
+                        <Col md={8} xs={12} sm={12}>
+                            <div className="create-project">
+                                <Subject
+                                    subjectObj={subjectObj}
+                                    subjectModalObj={subjectModalObj}/>
+                            </div>
+
+                        </Col>
                     </Row>
                 </div>
             </div>
