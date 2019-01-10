@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {actions} from 'mirrorx';
-import {Icon, Loading,Row,Col} from 'tinper-bee';
+import {Icon, Loading,Row,Col,Button} from 'tinper-bee';
 // import Grid from 'components/Grid';
 import Subject from './Subject';
 
 
+import Part from './Part'
+import QuoteTable from './Quote'
 
 // import 'bee-complex-grid/build/Grid.css';
 // import 'bee-pagination/build/Pagination.css'
@@ -29,23 +31,35 @@ class Quote extends Component {
 
     render() {
         const _this = this;
-        console.log("======")
-        const {subjectObj,subjectModalObj}=_this.props;
+        const {subjectObj,subjectModalObj, partObj,quoteIndex,partIndex, quoteList}=_this.props;
+        console.count("111")
 
         return (
             <div className='quote'>
                 <div className="query-name">创建项目</div>
                 <div>
+                    <Row className="btns-row">
+                        <Col md={12} xs={12} sm={12}>
+                            <Button colors="primary" size="sm" onClick={() => actions.quote.createQuote()} >创建报价</Button>
+                            <Button colors="primary" size="sm" >参考其他项目报价</Button>
+                            <Button colors="primary" size="sm" >提交报价</Button>
+                            <Button colors="primary" size="sm" >打印报价</Button>
+                        </Col>
+                    </Row>
                     <Row>
                         <Col md={4} xs={12} sm={12}>
-                            <div className='create-name'>4</div>
-                            <div className='create-part'>4</div>
+                            <div className='create-name'>
+                                <QuoteTable quoteList={quoteList} quoteIndex={quoteIndex}/>
+                            </div>
+                            <div className='create-part'>
+                                <Part partObj={partObj} partIndex={partIndex}/>
+                            </div>
                         </Col>
-                        <Col md={8} xs={12} sm={12}>
-                            <Subject
-                                subjectObj={subjectObj}
-                                subjectModalObj={subjectModalObj}/>
-                        </Col>
+                        {/*<Col md={8} xs={12} sm={12}>*/}
+                            {/*<Subject*/}
+                                {/*subjectObj={subjectObj}*/}
+                                {/*subjectModalObj={subjectModalObj}/>*/}
+                        {/*</Col>*/}
                     </Row>
                 </div>
             </div>

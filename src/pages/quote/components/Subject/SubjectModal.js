@@ -109,6 +109,7 @@ class SubjectModal extends Component {
                         data={subjectModalObj.list}
                         rowKey={(r, i) => r.index}
                         columns={this.detailColumn}
+
                         paginationObj={paginationObj}
                         getSelectedDataFunc={this.getSelectedDataFunc}
                         showHeaderMenu={false}

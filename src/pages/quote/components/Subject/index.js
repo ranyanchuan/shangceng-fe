@@ -25,9 +25,9 @@ class Subject extends Component {
     }
 
 
-    componentDidMount() {
-        // actions.query.loadList(this.props.queryParam); // 查询默认条件
-    }
+    // componentDidMount() {
+    //     // actions.query.loadList(this.props.queryParam); // 查询默认条件
+    // }
 
 
     onCheckSubject=()=>{
@@ -109,25 +109,25 @@ class Subject extends Component {
             width: 50,
         },
 
-        {
-            title: "工程量",
-            dataIndex: "quantitie",
-            key: "quantitie",
-            width: 160,
-            className: 'column-number-right ', // 靠右对齐
-            render: (text, record, index) => {
-                return <FactoryComp
-                    type='quantitie'//物料数量业务组件类型
-                    value={text}//初始化值
-                    field='quantitie'//修改的字段
-                    index={index}//字段的行号
-                    // required={true}//必输项
-                    record={record}//记录集用于多字段处理
-                    onChange={this.changeAllData}//回调函数
-                    // onValidate={this.onValidate}//校验的回调
-                />
-            }
-        },
+        // {
+        //     title: "工程量",
+        //     dataIndex: "quantitie",
+        //     key: "quantitie",
+        //     width: 160,
+        //     className: 'column-number-right ', // 靠右对齐
+        //     render: (text, record, index) => {
+        //         return <FactoryComp
+        //             type='quantitie'//物料数量业务组件类型
+        //             value={text}//初始化值
+        //             field='quantitie'//修改的字段
+        //             index={index}//字段的行号
+        //             // required={true}//必输项
+        //             record={record}//记录集用于多字段处理
+        //             onChange={this.changeAllData}//回调函数
+        //             // onValidate={this.onValidate}//校验的回调
+        //         />
+        //     }
+        // },
         {
             title: "小计",
             dataIndex: "total",
@@ -214,6 +214,7 @@ class Subject extends Component {
                     />
                 </div>
                 <Grid
+                    id="===="
                     data={subjectObj.list}
                     rowKey={(r, i) => r.index}
                     columns={this.detailColumn}

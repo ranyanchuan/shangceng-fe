@@ -1,8 +1,14 @@
-import { actions } from "mirrorx";
+import {
+    actions
+} from "mirrorx";
 // 引入services，如不需要接口请求可不写
 import * as api from "./service";
 // 接口返回数据公共处理方法，根据具体需要
-import { processData } from "utils";
+import {
+    processData,
+    deepClone,
+    uuid
+} from "utils";
 import moment from 'moment';
 
 /**
@@ -13,7 +19,7 @@ import moment from 'moment';
  *          0表示新增、1表示编辑，2表示查看详情 3提交
  *async loadList(param, getState) {
  *          rowData为行数据
-*/
+ */
 
 
 export default {
@@ -21,7 +27,14 @@ export default {
     name: "quote",
     // 设置当前 Model 所需的初始化 state
     initialState: {
-        showLoading:false,
+        showLoading: false,
+        quoteIndex:0,
+        quoteList:[],
+        partIndex:0,
+        partObj: {
+            list: [],
+            partVal: ''
+        },
         subjectObj: {
             list: [
                 {
@@ -124,7 +137,53 @@ export default {
         }
     },
     effects: {
+        //创建报价
+        async createQuote(data,getState){
+            const quoteList = deepClone(getState().quote.quoteList);
+            quoteList.push({
+                id:uuid(),
+                quoteName:`第xx次报价`,
+                quoteAmount:0,
+                status:0
+            });
+            actions.quote.updateState({
+                quoteList
+            })
 
+        },
+
+        //部位输入框
+        async partValChange(data, getState) {
+            const partObj = deepClone(getState().quote.partObj);
+            partObj.partVal = data.trim();
+            actions.quote.updateState({
+                partObj
+            });
+
+        },
+        //添加部位
+        async addPart(data, getState) {
+            const partObj = deepClone(getState().quote.partObj);
+            if (!partObj.partVal) return;
+            partObj.list.push({
+                partName: partObj.partVal,
+                partSubtotal: 0,
+                id: uuid()
+            });
+            partObj.partVal = '';
+            actions.quote.updateState({
+                partObj
+            });
+        },
+
+        //删除部位
+        async deletePart(data, getState) {
+            const partObj = deepClone(getState().quote.partObj);
+            partObj.list.splice(data, 1);
+            actions.quote.updateState({
+                partObj
+            });
+        }
 
     }
 };
