@@ -8,10 +8,10 @@ const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const pathUrl = ''; //http://127.0.0.1:8080 设置host，可选
-const context = '/shangceng';//工程节点名称
-const contentBase = './build'+context;//打包目录
+const context = '/shangceng_fe';//工程节点名称
+const contentBase = './build' + context;//打包目录
 const staticConfig = {
-    folder: "dll"
+  folder: "dll"
 };
 
 
@@ -22,7 +22,7 @@ let prodChunks = [];
 let htmlEntrys = [];
 
 const svrConfig = {
-    historyApiFallback: false
+  historyApiFallback: false
 };
 
 // 远程代理访问，可以配置多个代理服务：https://github.com/chimurai/http-proxy-middleware
@@ -35,7 +35,7 @@ const proxyConfig = [
     },
     // context，如果不配置，默认就是代理全部。
     router: [
-      '/wbalone', '/iuap-example','/eiap-plus/','/newref/', '/print_service/', '/iuap-print/'
+      '/wbalone', '/iuap-example', '/eiap-plus/', '/newref/', '/print_service/', '/iuap-print/'
     ],
     url: 'http://172.20.53.249:8080'
   },
@@ -44,13 +44,13 @@ const proxyConfig = [
     enable: true,
     headers: {
       // 这是之前网页的地址，从中可以看到当前请求页面的链接。
-      "Referer": "http://127.0.0.1:9688"
+      "Referer": "http://127.0.0.1:8180"
     },
     // context，如果不配置，默认就是代理全部。
     router: [
-      '/quota'
+      '/shangCeng'
     ],
-    url: 'http://127.0.0.1:9688'
+    url: 'http://127.0.0.1:8180'
   }
 ];
 
@@ -89,7 +89,7 @@ const resolve = {
     layout: path.resolve(__dirname, 'src/layout/'),
     utils: path.resolve(__dirname, 'src/utils/'),
     static: path.resolve(__dirname, 'src/static/'),
-    src:path.resolve(__dirname, 'src/')
+    src: path.resolve(__dirname, 'src/')
   }
 }
 //开发和生产需要的loader
@@ -100,21 +100,21 @@ const rules = [{
   use: [{
     loader: 'babel-loader'
   }]
-},{
+}, {
   test: /\.less$/,
   exclude: /(node_modules)/,
   use: ExtractTextPlugin.extract({
     use: ['css-loader', 'postcss-loader', 'less-loader'],
     fallback: 'style-loader'
   })
-},{
-    test: /\.css$/,
-    use: ExtractTextPlugin.extract({
-        use: [{
-            loader: 'css-loader',
-        }, 'postcss-loader'],
-        fallback: 'style-loader'
-    })
+}, {
+  test: /\.css$/,
+  use: ExtractTextPlugin.extract({
+    use: [{
+      loader: 'css-loader',
+    }, 'postcss-loader'],
+    fallback: 'style-loader'
+  })
 }, {
   test: /\.(png|jpg|jpeg|gif)(\?.+)?$/,
   //exclude: /favicon\.png$/,
@@ -123,7 +123,7 @@ const rules = [{
     options: {
       limit: 8196,
       name: 'images/[name].[hash:8].[ext]',
-      publicPath:pathUrl+context
+      publicPath: pathUrl + context
     }
   }]
 }, {
@@ -133,7 +133,7 @@ const rules = [{
     options: {
       name: '[name].[hash:8].[ext]',
       outputPath: 'fonts',
-      publicPath: pathUrl+context+'/fonts/'
+      publicPath: pathUrl + context + '/fonts/'
     }
   }]
 }]
@@ -143,9 +143,9 @@ entries.vendors = prodEntries.vendors = ['babel-polyfill'].concat(getVendors());
 
 
 glob.sync("./src/pages/**/app.jsx").forEach(path => {
-    const chunk = path.split("./src/pages/")[1].split(".jsx")[0];
-    entries[chunk] = [path, hotMiddlewareScript];
-    chunks.push(chunk);
+  const chunk = path.split("./src/pages/")[1].split(".jsx")[0];
+  entries[chunk] = [path, hotMiddlewareScript];
+  chunks.push(chunk);
 });
 
 //开发环境的webpack配置
@@ -154,7 +154,7 @@ const devConfig = {
   entry: entries,
   output: {
     path: path.resolve(__dirname, contentBase),
-    filename:  "[name].js",
+    filename: "[name].js",
     chunkFilename: 'js/[name].[hash:8].bundle.js',
     publicPath: context
   },
@@ -163,14 +163,14 @@ const devConfig = {
     rules: rules
   },
   plugins: [
-      new CommonsChunkPlugin({
-          name: "vendors",
-          filename:"vendors/[name].js"
-      }),
-        new ExtractTextPlugin({
-          filename: '[name].css',
-          allChunks: true
-        }),
+    new CommonsChunkPlugin({
+      name: "vendors",
+      filename: "vendors/[name].js"
+    }),
+    new ExtractTextPlugin({
+      filename: '[name].css',
+      allChunks: true
+    }),
     globalEnvConfig,
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
@@ -179,31 +179,31 @@ const devConfig = {
 }
 
 glob.sync("./src/pages/**/index.html").forEach(path => {
-    const chunk = path.split("./src/pages/")[1].split("/index.html")[0];
+  const chunk = path.split("./src/pages/")[1].split("/index.html")[0];
 
-    const filename = chunk + "/index.html"
-    const key = chunk + "/index";
+  const filename = chunk + "/index.html"
+  const key = chunk + "/index";
 
-    const htmlConf = {
-        filename: filename,
-        template: path,
-        inject: false,
-        hash: true,
-        key: key,
-        chunks:['vendors',chunk+'/app'],
-        favicon: './src/static/images/favicon.png'
-    };
-    htmlEntrys.push(filename);
-    devConfig.plugins.push(new HtmlWebpackPlugin(htmlConf));
+  const htmlConf = {
+    filename: filename,
+    template: path,
+    inject: false,
+    hash: true,
+    key: key,
+    chunks: ['vendors', chunk + '/app'],
+    favicon: './src/static/images/favicon.png'
+  };
+  htmlEntrys.push(filename);
+  devConfig.plugins.push(new HtmlWebpackPlugin(htmlConf));
 });
 
 
 
 glob.sync("./src/pages/**/app.jsx").forEach(path => {
-    const chunk = path.split("./src/pages/")[1].split(".jsx")[0];
+  const chunk = path.split("./src/pages/")[1].split(".jsx")[0];
 
-    prodEntries[chunk] = [path];
-    prodChunks.push(chunk);
+  prodEntries[chunk] = [path];
+  prodChunks.push(chunk);
 });
 
 //生产环境的webpack配置
@@ -211,7 +211,7 @@ const prodConfig = {
   devtool: 'source-map',
   entry: prodEntries,
   output: {
-    publicPath: pathUrl+context,
+    publicPath: pathUrl + context,
     path: path.resolve(__dirname, contentBase),
     chunkFilename: 'js/[name].bundle.js',
   },
@@ -220,14 +220,14 @@ const prodConfig = {
     rules: rules
   },
   plugins: [
-      new CommonsChunkPlugin({
-          name: "vendors",
-          filename:"vendors/[name].js"
-      }),
-        new ExtractTextPlugin({
-            filename: '[name].css',
-            allChunks: true
-        }),
+    new CommonsChunkPlugin({
+      name: "vendors",
+      filename: "vendors/[name].js"
+    }),
+    new ExtractTextPlugin({
+      filename: '[name].css',
+      allChunks: true
+    }),
     globalEnvConfig,
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
@@ -247,38 +247,38 @@ const prodConfig = {
 }
 
 glob.sync("./src/pages/**/index.html").forEach(path => {
-    const chunk = path.split("./src/pages/")[1].split("/index.html")[0];
+  const chunk = path.split("./src/pages/")[1].split("/index.html")[0];
 
-    const filename = chunk + "/index.html";
-    const key = chunk + "/index";
-    const realPath = prodConfig.output.publicPath + key + '.js';
-    const realCssPath = prodConfig.output.publicPath + key + '.css';
+  const filename = chunk + "/index.html";
+  const key = chunk + "/index";
+  const realPath = prodConfig.output.publicPath + key + '.js';
+  const realCssPath = prodConfig.output.publicPath + key + '.css';
 
-    const htmlConf = {
-        filename: filename,
-        template: path,
-        inject: false,
-        hash: true,
-        key: key,
-        chunks:['vendors',chunk+'/app'],
-        favicon: './src/static/images/favicon.png',
-        realPath: realPath,
-        realCssPath: realCssPath,
-        minify: {
-            removeComments: true,
-            collapseWhitespace: true,
-            removeRedundantAttributes: true,
-            useShortDoctype: true,
-            removeEmptyAttributes: true,
-            removeStyleLinkTypeAttributes: true,
-            keepClosingSlash: true,
-            minifyJS: true,
-            minifyCSS: true,
-            minifyURLs: true
-        }
-    };
+  const htmlConf = {
+    filename: filename,
+    template: path,
+    inject: false,
+    hash: true,
+    key: key,
+    chunks: ['vendors', chunk + '/app'],
+    favicon: './src/static/images/favicon.png',
+    realPath: realPath,
+    realCssPath: realCssPath,
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeRedundantAttributes: true,
+      useShortDoctype: true,
+      removeEmptyAttributes: true,
+      removeStyleLinkTypeAttributes: true,
+      keepClosingSlash: true,
+      minifyJS: true,
+      minifyCSS: true,
+      minifyURLs: true
+    }
+  };
 
-    prodConfig.plugins.push(new HtmlWebpackPlugin(htmlConf));
+  prodConfig.plugins.push(new HtmlWebpackPlugin(htmlConf));
 });
 
 
