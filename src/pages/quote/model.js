@@ -37,6 +37,7 @@ export default {
         ppdesignCenter:'',// 设计中心
         
         pid:'',// 报价主表id
+        slectedPartId:'',//选中部位的id
 
         showLoading: false,
         quoteIndex:-1,
@@ -142,12 +143,13 @@ export default {
                 return;
             };
             
-            const res = processData(await api.addPart({
+            const res = processData(await api.savePart({
                 cusid:ppcusid,
                 cusCode:ppcusno,
                 pid :pid,
                 ppPositionName:partObj.partVal
             }))
+            console.log(res)
             if(res.result.status !== "success") {
                 Warning("添加部位失败")
                 return;
@@ -161,11 +163,13 @@ export default {
 
         //删除部位
         async deletePart(data, getState) {
-            const partObj = deepClone(getState().quote.partObj);
-            partObj.list.splice(data, 1);
-            actions.quote.updateState({
-                partObj
-            });
+            const { slectedPartId } = getState().quote;
+            console.log("slectedPartId",slectedPartId)
+            // const partObj = deepClone(getState().quote.partObj);
+            // partObj.list.splice(data, 1);
+            // actions.quote.updateState({
+            //     partObj
+            // });
         },
 
 

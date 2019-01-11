@@ -96,8 +96,8 @@ export const getParts = (params) => {
  * 添加保存部位
  * @data {*} data
  */
-export const addPart = (data) => {
-    return request(URL.ADD_PART,{
+export const savePart = (data) => {
+    return request(URL.SAVE_PART,{
         method: "post",
         data:data
     })

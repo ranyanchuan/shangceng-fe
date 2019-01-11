@@ -115,7 +115,7 @@ class Part extends Component {
                     }}
                     onRowClick={(record, index) => {
                         console.log(record)
-                        actions.quote.updateState({partIndex: index});
+                        actions.quote.updateState({partIndex: index, slectedPartId:record.id});
                     }}
                     getSelectedDataFunc={() => {}}
                 />
