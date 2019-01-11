@@ -9,7 +9,8 @@ import {
     deepClone,
     structureObj,
     initStateObj,
-    uuid
+    uuid,
+    Warning
 } from "utils";
 import moment from 'moment';
 
@@ -29,6 +30,12 @@ export default {
     name: "quote",
     // 设置当前 Model 所需的初始化 state
     initialState: {
+        ppcusname:'',// 客户名称
+        ppcusid:'',//   客户id
+        ppcusno:'', //  客户编码
+        ppcusaddress:'', //项目地址
+        ppdesignCenter:'',// 设计中心
+
         showLoading: false,
         quoteIndex: 0,
         quoteList: [],
@@ -69,19 +76,34 @@ export default {
         }
     },
     effects: {
-        //创建报价
-        async createQuote(data, getState) {
-            const quoteList = deepClone(getState().quote.quoteList);
-            quoteList.push({
-                id: uuid(),
-                quoteName: `第xx次报价`,
-                quoteAmount: 0,
-                status: 0
-            });
+        //获取选中客户所有报价
+        async getQuotes(data,getState){
+            const res = processData(await api.getQuotes(data));
+            console.log(res)
+            if(res.result.status !== "success") {
+                Warning("用户报价列表获取失败")
+                return;
+            };
             actions.quote.updateState({
-                quoteList
+                quoteList:res.result.data
             })
-
+        },
+        //创建报价
+        async createQuote(data,getState){
+            const { ppcusname, ppcusid, ppcusno, ppcusaddress, ppdesignCenter } = getState().quote;
+            if(!ppcusid) {
+                Warning("请先选择客户");
+                return;
+            }
+            const res = await api.saveQuote({ ppcusname, ppcusid, ppcusno, ppcusaddress, ppdesignCenter, ppTotalAmount:0 })
+            console.log(res)
+            if(res.data.success !== "success") {
+                Warning("用户报价列表获取失败")
+                return;
+            };
+            actions.quote.updateState({
+                quoteList:res.data.detailMsg.data
+            })
         },
 
         //部位输入框

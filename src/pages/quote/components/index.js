@@ -29,7 +29,7 @@ class Quote extends Component {
 
   render() {
     const _this = this;
-    const {subjectObj, subjectModalObj,subjectModalLoading, partObj, quoteIndex, partIndex, quoteList} = _this.props;
+    const {subjectObj, subjectModalObj,subjectModalLoading, partObj, quoteIndex, partIndex, quoteList,ppdesignCenter, ppcusaddress} = _this.props;
 
     return (
       <div className="quote">
@@ -39,7 +39,7 @@ class Quote extends Component {
               客户名称：
               <RefMultipleTableWithInput
                 placeholder="请选择客户"
-                title={"复杂表格参照"}
+                title={"客户列表"}
                 backdrop={true}
                 disabled={false}
                 multiple={false}
@@ -54,8 +54,19 @@ class Quote extends Component {
                 }}
                 matchUrl={`${GROBAL_HTTP_CTX}/common-ref/matchPKRefJSON`}
                 filterUrl={`${GROBAL_HTTP_CTX}/common-ref/filterRefJSON`}
-                valueField={"refpk"}
-                displayField={"{refname}-{refpk}"}
+                valueField={"refname"}
+                displayField={"{refname}"}
+                onSave = {(ref) => {
+                    console.log(ref);
+                    actions.quote.updateState({
+                      ppcusname:ref[0]["name"],// 客户名称
+                      ppcusid:ref[0]["id"],//   客户id
+                      ppcusno:ref[0]["refcode"], //  客户编码
+                      ppdesignCenter:ref[0]["desgin_centor"],
+                      ppcusaddress:ref[0]["address"]
+                    });
+                    actions.quote.getQuotes({id:ref[0].id})
+                }}
               // {...getFieldProps("valueField", {
               //   initialValue: '{"refname":"高级-T3","refpk":"level5"}',
               //   rules: [
@@ -69,11 +80,11 @@ class Quote extends Component {
             </Col>
             <Col md={4} xs={12} sm={12}>
               设计中心：
-              <FormControl readOnly />
+              <FormControl value={ppdesignCenter} readOnly />
             </Col>
             <Col md={4} xs={12} sm={12}>
               项目地址：
-              <FormControl readOnly />
+              <FormControl value={ppcusaddress} readOnly />
             </Col>
           </Row>
         </div>
