@@ -84,6 +84,14 @@ class Part extends Component {
                         onChange={actions.quote.partValChange}
                         placeholder="请输入部位"
                     />
+                    <div>
+                    <Button
+                        colors="primary"
+                        size="sm"
+                        onClick={() => actions.quote.addPart()}
+                    >
+                        添加
+                    </Button>
                     <Button
                         style={{marginRight: 16}}
                         colors="primary"
@@ -96,13 +104,9 @@ class Part extends Component {
                     >
                         参考其他部位
                     </Button>
-                    <Button
-                        colors="primary"
-                        size="sm"
-                        onClick={() => actions.quote.addPart()}
-                    >
-                        添加
-                    </Button>
+                    </div>
+                    
+                   
                 </div>
                 <Grid
                     rowKey={(r, i) => r.id}
