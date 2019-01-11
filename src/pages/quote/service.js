@@ -11,7 +11,7 @@ const URL = {
     "DELETE_PART": `${GROBAL_HTTP_CTX}/pm_projectprice_m/deletePart`,//删除部位
     "ADD_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveWithList`,
     "UPD_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveBatch`,
-    "DEL_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
+    "DEL_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_t1/deleteBatch`,
 }
 
 /**

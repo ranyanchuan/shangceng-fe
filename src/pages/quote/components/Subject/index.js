@@ -34,7 +34,7 @@ class Subject extends Component {
     }
 
     getQuery = (param = {}) => {
-        const {selectedPartId, pid} = this.props;
+        const {selectedPartId} = this.props;
         param.search_pid = selectedPartId;
         actions.quote.loadSubjectList(param); // 查询默认条件
     }
@@ -143,9 +143,9 @@ class Subject extends Component {
             className: 'column-number-right ', // 靠右对齐
             render: (text, record, index) => {
                 return <FactoryComp
-                    type='quantitie'//物料数量业务组件类型
+                    type='ppQuantity'//物料数量业务组件类型
                     value={text}//初始化值
-                    field='quantitie'//修改的字段
+                    field='ppQuantity'//修改的字段
                     index={index}//字段的行号
                     // required={true}//必输项
                     record={record}//记录集用于多字段处理
@@ -219,10 +219,10 @@ class Subject extends Component {
         const list = subjectObj.list.filter((item) => {
             return item._status === 'edit';
         })
-        const {pid} = this.props;
         const status = await actions.quote.updateSubject(list);
+        const {ppcusid}=this.props;
         if (status) {
-            actions.quote.getQuotes({id: pid})
+            actions.quote.getQuotes({id: ppcusid})
         }
     }
 
@@ -237,9 +237,9 @@ class Subject extends Component {
         const _this = this;
         if (type === 1) { // 确定
             const {selectData} = this.state;
-            const {status} = await actions.quote.delSubject(selectData);
+            const status = await actions.quote.delSubject(selectData);
             if (status) {
-                _this.setState({selectData: data});
+                _this.setState({selectData: []});
                 _this.getQuery();
             }
         }

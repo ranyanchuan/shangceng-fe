@@ -13,7 +13,7 @@ class FactoryComp extends Component {
     renderComp = () => {
         let { type, value, record } = this.props;
         switch (type) {
-            case 'quantitie'://物料数量
+            case 'ppQuantity'://物料数量
                 return (<div>
                     {record._edit ?
                         <NumberField {...this.props}

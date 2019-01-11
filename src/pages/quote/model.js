@@ -94,7 +94,7 @@ export default {
                 // 如果请求出错,数据初始化
                 const {subjectObj} = getState().quote;
                 const partObj = {list: [], partVal: ""};
-                actions.quote.updateState({subjectObj: initStateObj(subjectObj), partObj,partIndex: 0});
+                actions.quote.updateState({subjectObj: initStateObj(subjectObj), partObj, partIndex: 0});
             }
 
         },
@@ -134,8 +134,9 @@ export default {
             actions.quote.updateState({partObj, showPartLoading: false, partIndex: 0});
             if (status === 'success' && data.length) {
                 const {id} = data[0];
+                actions.quote.updateState({selectedPartId: id});
                 actions.quote.loadSubjectList({search_pid: id});
-            }else{
+            } else {
                 // 如果请求出错,数据初始化
                 const {subjectObj} = getState().quote;
                 actions.quote.updateState({subjectObj: initStateObj(subjectObj)});
@@ -229,7 +230,7 @@ export default {
          */
         async addSubject(param = {}, getState) {
             // 正在加载数据，显示加载 Loading 图标
-            actions.quote.updateState({subjectModalLoading: true});
+            actions.quote.updateState({subjectModalLoading: true,});
             const {result} = processData(await api.addSubject(param), '添加成功');  // 调用 getList 请求数据
             const {data = []} = result;
             actions.quote.updateState({subjectModalLoading: false});
