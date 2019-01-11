@@ -21,17 +21,17 @@ export default {
     name: "quota",
     // 设置当前 Model 所需的初始化 state
     initialState: {
-        rowData:{},
-        showLoading:false,
+        rowData: {},
+        showLoading: false,
         list: [],
-        orderTypes:[],
-        pageIndex:1,
-        pageSize:10,
-        totalPages:1,
-        total:0,
-        detail:{},
-        searchParam:{},
-        validateNum:99,//不存在的step
+        orderTypes: [],
+        pageIndex: 1,
+        pageSize: 10,
+        totalPages: 1,
+        total: 0,
+        detail: {},
+        searchParam: {},
+        validateNum: 99,//不存在的step
 
     },
     reducers: {
@@ -55,8 +55,8 @@ export default {
          */
         async loadList(param, getState) {
             // 正在加载数据，显示加载 Loading 图标
-            actions.quota.updateState({ showLoading:true })
-            if(param){
+            actions.quota.updateState({ showLoading: true })
+            if (param) {
                 param.pageIndex = param.pageIndex ? param.pageIndex - 1 : 0;
                 param.pageSize = param.pageSize ? param.pageSize : 10;
             } else {
@@ -66,19 +66,20 @@ export default {
             let {result} = processData(await api.getList(param));
             actions.quota.updateState({  showLoading:false });
             const {data:res}=result;
+
             if (res) {
-                if(res.content&&res.content.length){
-                    for(let i=0;i<res.content.length;i++){
-                        let temp = Object.assign({},res.content[i]);
-                        res.content[i].key=i+1;
+                if (res.content && res.content.length) {
+                    for (let i = 0; i < res.content.length; i++) {
+                        let temp = Object.assign({}, res.content[i]);
+                        res.content[i].key = i + 1;
                     }
                 }
                 // console.log('res content',res.content);
                 actions.quota.updateState({
                     list: res.content,
-                    pageIndex:res.number + 1,
-                    totalPages:res.totalPages,
-                    total:res.totalElements
+                    pageIndex: res.number + 1,
+                    totalPages: res.totalPages,
+                    total: res.totalElements
                 });
             }
         },
@@ -88,21 +89,21 @@ export default {
          * @param {*} param
          * @param {*} getState
          */
-        getOrderTypes(param,getState){
+        getOrderTypes(param, getState) {
             actions.quota.updateState({
-            orderTypes:  [{
-                "code":"0",
-                "name":"D001"
-            },{
-                "code":"1",
-                "name":"D002"
-            },{
-                "code":"2",
-                "name":"D003"
-            },{
-                "code":"3",
-                "name":"D004"
-            }]
+                orderTypes: [{
+                    "code": "0",
+                    "name": "D001"
+                }, {
+                    "code": "1",
+                    "name": "D002"
+                }, {
+                    "code": "2",
+                    "name": "D003"
+                }, {
+                    "code": "3",
+                    "name": "D004"
+                }]
             })
         },
 
@@ -121,21 +122,21 @@ export default {
          * @param {*} getState
          */
         async removeList(id, getState) {
-            let result = await api.deleteList([{id}]);
+            let result = await api.deleteList([{ id }]);
             return result;
         },
 
-        async delItem(param,getState){
+        async delItem(param, getState) {
             actions.quota.updateState({
-              showLoading:true
+                showLoading: true
             })
-            let res=processData(await api.delQuota(param.param),'删除成功');
+            let res = processData(await api.delQuota(param.param), '删除成功');
             actions.quota.loadList();
         },
 
-        async save(param,getState){//保存
+        async save(param, getState) {//保存
             actions.quota.updateState({
-              showLoading:true
+                showLoading: true
             })
             let {result} = processData(await api.saveQuota(param),'保存成功');
             const {data:res}=result;
@@ -144,13 +145,13 @@ export default {
                window.history.go(-1);
             }
             actions.quota.updateState({
-                showLoading:false,
+                showLoading: false,
 
             });
         },
 
-        async queryDetail(param,getState) {
-            let {data:{detailMsg:{data:{content}}}}=await api.getDetail(param);
+        async queryDetail(param, getState) {
+            let { data: { detailMsg: { data: { content } } } } = await api.getDetail(param);
             return content[0];
         },
 

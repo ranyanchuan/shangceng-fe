@@ -37,7 +37,7 @@ export default {
         ppdesignCenter:'',// 设计中心
 
         pid:'',// 报价主表id
-        slectedPartId:'',//选中部位的id
+        selectedPartId:'',//选中部位的id
 
         showLoading: false,
         quoteIndex:-1,
@@ -149,12 +149,15 @@ export default {
                 pid :pid,
                 ppPositionName:partObj.partVal
             }))
-            console.log(res)
+            
             if(res.result.status !== "success") {
                 Warning("添加部位失败")
                 return;
             };
-            _partObj.list = res.result.data;
+            console.log(pid)
+            const response = processData(await api.getParts({id:pid}));
+            console.log(response)
+            _partObj.list = response.result.data;
             _partObj.partVal = '';
             actions.quote.updateState({
                 partObj:_partObj
@@ -163,13 +166,17 @@ export default {
 
         //删除部位
         async deletePart(data, getState) {
-            const { slectedPartId } = getState().quote;
-            console.log("slectedPartId",slectedPartId)
-            // const partObj = deepClone(getState().quote.partObj);
-            // partObj.list.splice(data, 1);
-            // actions.quote.updateState({
-            //     partObj
-            // });
+            const { selectedPartId, pid,  partObj} = getState().quote;
+            const _partObj = deepClone(partObj);
+            console.log("selectedPartId",selectedPartId)
+            const res = processData(await api.deletePart({id:data}))
+            console.log("res169",res)
+            const response = processData(await api.getParts({id:pid}));
+            console.log(response)
+            _partObj.list = response.result.data;
+            actions.quote.updateState({
+                partObj:_partObj
+            });
         },
 
 
