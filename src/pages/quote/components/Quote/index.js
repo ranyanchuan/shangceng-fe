@@ -49,6 +49,7 @@ class QuoteTable extends Component {
           columns={this.columns}
           data={quoteList}
           paginationObj={paginationObj}
+          getSelectedDataFunc={() => {}}
           rowClassName={(record, index, indent) => {
             return quoteIndex === index ? "selected" : "";
           }}

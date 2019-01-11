@@ -53,11 +53,11 @@ class Quote extends Component {
                         </Col>
                         <Col md={4} xs={12} sm={12}>
                             设计中心：
-                            <FormControl readonly={true} />
+                            <FormControl readOnly />
                         </Col>
                         <Col md={4} xs={12} sm={12}>
                             项目地址：
-                            <FormControl />
+                            <FormControl readOnly />
                         </Col>
                     </Row>
                 </div>
