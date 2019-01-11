@@ -33,12 +33,11 @@ class Subject extends Component {
 
     }
 
-    getQuery=(param={})=>{
-        const {slectedPartId,pid}=this.props;
-        param.search_pid=slectedPartId;
+    getQuery = (param = {}) => {
+        const {slectedPartId, pid} = this.props;
+        param.search_pid = slectedPartId;
         actions.quote.loadSubjectList(param); // 查询默认条件
     }
-
 
 
     onCloseModal = () => {
@@ -47,9 +46,9 @@ class Subject extends Component {
 
     changeAllData = (field, value, index) => {
         const {subjectObj} = this.props;
-        const {list}=subjectObj;
-        list[index][field]=value;
-        subjectObj.list=list;
+        const {list} = subjectObj;
+        list[index][field] = value;
+        subjectObj.list = list;
         actions.quote.updateState({subjectObj: subjectObj});
     }
 
@@ -100,8 +99,8 @@ class Subject extends Component {
      */
     onPageSelect = (value, type) => {
         let {subjectObj} = this.props;
-        let {pageIndex, pageSize} = getPageParam(value, type,subjectObj);
-        let param = {pageSize,pageIndex};
+        let {pageIndex, pageSize} = getPageParam(value, type, subjectObj);
+        let param = {pageSize, pageIndex};
         this.getQuery(param);
     }
 
@@ -112,7 +111,7 @@ class Subject extends Component {
             dataIndex: "index",
             key: "index",
             width: 60,
-            render: (text, record, index) => <div>{index+1}</div>
+            render: (text, record, index) => <div>{index + 1}</div>
         },
         {
             title: "项目名称",
@@ -127,7 +126,7 @@ class Subject extends Component {
             width: 80,
             className: 'column-number-right ', // 靠右对齐
             render: (text, record, index) => {
-                return (<span>{(typeof text)==='number'? text.toFixed(2):""}</span>)
+                return (<span>{(typeof text) === 'number' ? text.toFixed(2) : ""}</span>)
             }
         },
         {
@@ -162,7 +161,7 @@ class Subject extends Component {
             className: 'column-number-right ', // 靠右对齐
             width: 80,
             render: (text, record, index) => {
-                return (<span>{(typeof text)==='number'? text.toFixed(2):""}</span>)
+                return (<span>{(typeof text) === 'number' ? text.toFixed(2) : ""}</span>)
             }
         },
         {
@@ -177,7 +176,7 @@ class Subject extends Component {
             dataIndex: "calculateRule",
             key: "calculateRule",
             width: 400,
-        },{
+        }, {
             title: "操作",
             dataIndex: "action",
             key: "action",
@@ -201,27 +200,27 @@ class Subject extends Component {
         this.setState({addSubModalVisible: true});
     }
 
-    onUpdateSubject=()=>{
+    onUpdateSubject = () => {
         const subjectObj = deepClone(this.props.subjectObj);
-        const {list}=subjectObj;
+        const {list} = subjectObj;
         const editSelectData = list.map((item) => {
             item['_checked'] = false;
             item['_status'] = 'edit';
             item['_edit'] = true;
             return item;
         })
-        subjectObj.list=editSelectData;
+        subjectObj.list = editSelectData;
         actions.quote.updateState({subjectObj: subjectObj});
     }
 
 
-    onSaveSubject=async ()=>{
+    onSaveSubject = async () => {
         const subjectObj = deepClone(this.props.subjectObj);
-        const list=subjectObj.list.filter((item)=>{
-            return item._status==='edit';
+        const list = subjectObj.list.filter((item) => {
+            return item._status === 'edit';
         })
-        const status=await actions.quote.updateSubject(list);
-        if(status){
+        const status = await actions.quote.updateSubject(list);
+        if (status) {
             this.getQuery();
         }
     }
@@ -234,12 +233,12 @@ class Subject extends Component {
      */
     async confirmDel(type) {
         this.setState({showPopAlert: false});
-        const _this=this;
+        const _this = this;
         if (type === 1) { // 确定
             const {selectData} = this.state;
-            const { status } = await actions.quote.delSubject(selectData);
+            const {status} = await actions.quote.delSubject(selectData);
             if (status) {
-                _this.setState({selectData:data});
+                _this.setState({selectData: data});
                 _this.getQuery();
             }
         }
@@ -249,10 +248,12 @@ class Subject extends Component {
 
     render() {
         const _this = this;
-        const {subjectObj, subjectModalObj,subjectModalLoading,subjectListLoading} = _this.props;
+        const {subjectObj, subjectModalObj, subjectModalLoading, subjectListLoading} = _this.props;
         const {addSubModalVisible, showPopAlert} = _this.state;
-        const {slectedPartId,pid}=_this.props;
+        const {selectedPartId, pid} = _this.props;
+        const {list = []} = subjectObj;
 
+        const btnStatus = list.length ? false : true;
 
         const paginationObj = {   // 分页
             horizontalPosition: "right",
@@ -271,23 +272,23 @@ class Subject extends Component {
                 <div className="subject-header">
                     <div className="desc">
                         <div>第一次报价</div>
-                        <div>总额: 11000.00元</div>
-                        <div>工程造价: 11000.00元</div>
-                        <div>管理费: 11000.00元</div>
-                        <div className="end">税金: 110.00元</div>
+                        <div>总额: <span className="money">11000.00</span>元</div>
+                        <div>工程造价: <span>10000.00</span>元</div>
+                        <div>管理费: <span>500.00</span>元</div>
+                        <div className="end"><span>税金: 500.00元</span></div>
                     </div>
                     <div className='table-header'>
-                        <Button  shape="border" colors="success" size="sm"
+                        <Button shape="border" colors="success" size="sm"
                                 onClick={this.onCheckSubject}
                         >
                             新增项目
                         </Button>
-                        <Button  shape="border" colors="success" size="sm" className="del-btn"
+                        <Button shape="border" colors="success" size="sm" className="del-btn" disabled={btnStatus}
                                 onClick={this.onSaveSubject}
                         >
                             保存项目
                         </Button>
-                        <Button  shape="border" colors="success" size="sm" className="del-btn"
+                        <Button shape="border" colors="success" size="sm" className="del-btn" disabled={btnStatus}
                                 onClick={this.onUpdateSubject}
                         >
                             修改项目
@@ -297,6 +298,7 @@ class Subject extends Component {
                             colors="danger"
                             size="sm"
                             className="del-btn"
+                            disabled={btnStatus}
                             onClick={this.onClickDelConfirm}
                         >
                             批量删除
@@ -325,7 +327,7 @@ class Subject extends Component {
                     // syncHover={rowEditStatus}
                     getSelectedDataFunc={this.getSelectedDataFunc}
                     emptyText={() => <Icon style={{"fontSize": "60px"}} type="uf-nodata"/>}
-                    loading={{ show: subjectListLoading, loadingType: "line" }}
+                    loading={{show: subjectListLoading, loadingType: "line"}}
                 />
                 <SubjectModal
                     modalVisible={addSubModalVisible}
@@ -333,9 +335,9 @@ class Subject extends Component {
                     onCloseModal={_this.onCloseModal}
                     subjectModalLoading={subjectModalLoading}
                     subjectObj={subjectObj}
-                    id={slectedPartId}
+                    id={selectedPartId}
                     pid={pid}
-            />
+                />
             </div>
         )
     }

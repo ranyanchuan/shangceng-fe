@@ -1,19 +1,12 @@
 import React, {Component} from "react";
 import {actions} from "mirrorx";
 import {Icon, Loading, Row, Col, Button, FormControl} from "tinper-bee";
-import Select from "bee-select";
 import RefMultipleTableWithInput from "ref-multiple-table";
 
-// import Grid from 'components/Grid';
-import Subject from "./Subject";
-
-import Part from "./Part";
 import QuoteTable from "./Quote";
+import Subject from "./Subject";
+import Part from "./Part";
 
-// import 'bee-complex-grid/build/Grid.css';
-// import 'bee-pagination/build/Pagination.css'
-// import 'bee-table/build/Table.css';
-// import 'bee-input-number/build/InputNumber.css';
 import "ref-multiple-table/dist/index.css";
 import "./index.less";
 
