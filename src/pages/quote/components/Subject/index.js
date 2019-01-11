@@ -7,6 +7,8 @@ import FactoryComp from './FactoryComp';
 import SubjectModal from './SubjectModal';
 
 
+import {deepClone, Warning, getPageParam} from "utils";
+
 import 'bee-complex-grid/build/Grid.css';
 import 'bee-pagination/build/Pagination.css'
 import 'bee-table/build/Table.css';
@@ -14,6 +16,8 @@ import 'bee-input-number/build/InputNumber.css';
 import './index.less';
 
 class Subject extends Component {
+
+
     constructor(props) {
         super(props);
         this.state = {
@@ -24,21 +28,26 @@ class Subject extends Component {
     }
 
 
-    // componentDidMount() {
-    //     // actions.query.loadList(this.props.queryParam); // 查询默认条件
-    // }
-
-
-    onCheckSubject = () => {
-        this.setState({addSubModalVisible: true});
+    componentDidMount() {
+        actions.quote.loadSubjectList(); // 查询默认条件
     }
+
+    getQuery=()=>{
+        actions.quote.loadSubjectList(); // 查询默认条件
+    }
+
+
 
     onCloseModal = () => {
         this.setState({addSubModalVisible: false});
     }
 
     changeAllData = (field, value, index) => {
-        console.log("field, value, index", field, value, index);
+        const {subjectObj} = this.props;
+        const {list}=subjectObj;
+        list[index][field]=value;
+        subjectObj.list=list;
+        actions.quote.updateState({subjectObj: subjectObj});
     }
 
     getSelectedDataFunc = (selectData) => {
@@ -59,26 +68,42 @@ class Subject extends Component {
         console.log("=====")
     }
 
+
     /**
      *
-     * 删除子表选中的数据
-     * @param {Number} type 1、取消 2、确定
-     * @memberof Order
+     * @param {Number} pageIndex 跳转指定页数
      */
-    async confirmDel(type) {
-        this.setState({showPopAlert: false});
-        if (type === 1) { // 确定
-            const {selectData, searchId} = this.state;
-            // if (this.clearOldData()) {
-            //     const { status } = await actions.masterDetailOne.delOrderDetail(selectData);
-            //     if (status === "success") {
-            //         actions.masterDetailOne.queryChild({ search_orderId: searchId }); // 获取子表
-            //         this.oldData = []; //清空用于编辑和添加的缓存数据
-            //     }
-            // }
-        }
-        this.setState({showPopAlert: false});
+    freshData = (pageIndex) => {
+        this.onPageSelect(pageIndex, 0);
     }
+
+
+    /**
+     *
+     *
+     * @param {Number} pageIndex 当前分页值 第几条
+     * @param {Number} value 分页条数
+     * @param {string} tableObj 分页table
+     */
+    onDataNumSelect = (pageIndex, value) => {
+        this.onPageSelect(value, 1);
+    }
+
+    /**
+     *
+     * @param {Number} value pageIndex或者pageSize值
+     * @param {Number} type type为0标识为 pageIndex,为1标识 pageSize,
+     * @param {string} tableName 分页 table 名称
+     */
+    onPageSelect = (value, type) => {
+        let searchParam = {};
+        let {subjectObj} = this.props;
+        let {pageIndex, pageSize} = getPageParam(value, type,subjectObj);
+        searchParam.pageSize = pageSize;
+        searchParam.pageIndex = pageIndex;
+        actions.quote.loadSubjectList(searchParam);
+    }
+
 
 
     detailColumn = [
@@ -86,25 +111,30 @@ class Subject extends Component {
             title: "序号",
             dataIndex: "index",
             key: "index",
-            width: 50
+            width: 60,
+            render: (text, record, index) => <div>{index+1}</div>
         },
         {
             title: "项目名称",
-            dataIndex: "projectName",
-            key: "projectName",
+            dataIndex: "categorynameEnumValue",
+            key: "categorynameEnumValue",
             width: 100,
         },
         {
             title: "单价",
             dataIndex: "price",
             key: "price",
-            width: 50,
+            width: 80,
+            className: 'column-number-right ', // 靠右对齐
+            render: (text, record, index) => {
+                return (<span>{(typeof text)==='number'? text.toFixed(2):""}</span>)
+            }
         },
         {
             title: "单位",
-            dataIndex: "unit",
-            key: "unit",
-            width: 50,
+            dataIndex: "unitEnumValue",
+            key: "unitEnumValue",
+            width: 80,
         },
         {
             title: "工程量",
@@ -131,25 +161,28 @@ class Subject extends Component {
             key: "total",
             className: 'column-number-right ', // 靠右对齐
             width: 80,
+            render: (text, record, index) => {
+                return (<span>{(typeof text)==='number'? text.toFixed(2):""}</span>)
+            }
         },
         {
             title: "工业说明",
             dataIndex: "practice",
             key: "practice",
-            width: 100,
+            width: 400,
+
         },
         {
             title: "计算方法",
             dataIndex: "calculateRule",
             key: "calculateRule",
-            width: 100,
-        },
-        {
+            width: 400,
+        },{
             title: "操作",
             dataIndex: "action",
             key: "action",
             fixed: "right",
-            width: 60,
+            width: 55,
             render(text, record, index) {
                 const _this = this;
                 return (
@@ -164,11 +197,62 @@ class Subject extends Component {
 
     ];
 
+    onCheckSubject = () => {
+        this.setState({addSubModalVisible: true});
+    }
+
+    onUpdateSubject=()=>{
+        const subjectObj = deepClone(this.props.subjectObj);
+        const {list}=subjectObj;
+        const editSelectData = list.map((item) => {
+            item['_checked'] = false;
+            item['_status'] = 'edit';
+            item['_edit'] = true;
+            return item;
+        })
+        subjectObj.list=editSelectData;
+        actions.quote.updateState({subjectObj: subjectObj});
+    }
+
+
+    onSaveSubject=async ()=>{
+        const subjectObj = deepClone(this.props.subjectObj);
+        const list=subjectObj.list.filter((item)=>{
+            return item._status==='edit';
+        })
+        const status=await actions.quote.updateSubject(list);
+        if(status){
+            this.getQuery();
+        }
+    }
+
+    /**
+     *
+     * 删除子表选中的数据
+     * @param {Number} type 1、取消 2、确定
+     * @memberof Order
+     */
+    async confirmDel(type) {
+        this.setState({showPopAlert: false});
+        const _this=this;
+        if (type === 1) { // 确定
+            const {selectData} = this.state;
+            const { status } = await actions.quote.delSubject(selectData);
+            if (status) {
+                _this.setState({selectData:data});
+                _this.getQuery();
+            }
+        }
+        this.setState({showPopAlert: false});
+    }
+
 
     render() {
         const _this = this;
         const {subjectObj, subjectModalObj,subjectModalLoading} = _this.props;
         const {addSubModalVisible, showPopAlert} = _this.state;
+
+        console.log("subjectObj",subjectObj)
 
         const paginationObj = {   // 分页
             horizontalPosition: "right",
@@ -187,16 +271,26 @@ class Subject extends Component {
                 <div className="subject-header">
                     <div className="desc">
                         <div>第一次报价</div>
-                        <div>总额 11000.00元</div>
-                        <div>工程造价 11000.00元</div>
-                        <div>管理费 11000.00元</div>
-                        <div className="end">税金 110.00元</div>
+                        <div>总额: 11000.00元</div>
+                        <div>工程造价: 11000.00元</div>
+                        <div>管理费: 11000.00元</div>
+                        <div className="end">税金: 110.00元</div>
                     </div>
                     <div className='table-header'>
                         <Button shape="border" colors="success" size="sm"
                                 onClick={this.onCheckSubject}
                         >
                             新增项目
+                        </Button>
+                        <Button shape="border" colors="success" size="sm" className="del-btn"
+                                onClick={this.onSaveSubject}
+                        >
+                            保存项目
+                        </Button>
+                        <Button shape="border" colors="success" size="sm" className="del-btn"
+                                onClick={this.onUpdateSubject}
+                        >
+                            修改项目
                         </Button>
                         <Button
                             shape="border"
@@ -221,7 +315,7 @@ class Subject extends Component {
                 </div>
                 <Grid
                     data={subjectObj.list}
-                    rowKey={(r, i) => r.index}
+                    rowKey={(r, i) => r.id}
                     columns={this.detailColumn}
                     paginationObj={paginationObj}
                     // columnFilterAble={rowEditStatus}
@@ -238,6 +332,7 @@ class Subject extends Component {
                     subjectModalObj={subjectModalObj}
                     onCloseModal={_this.onCloseModal}
                     subjectModalLoading={subjectModalLoading}
+                    subjectObj={subjectObj}
                 />
             </div>
         )

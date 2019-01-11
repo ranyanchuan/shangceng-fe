@@ -200,3 +200,22 @@ export function initStateObj(obj) {
     };
 
 }
+
+
+/**
+ *@description 获取分页数据
+ *
+ * @param {*} value
+ * @param {*} type type为0标识为pageIndex,为1标识pageSize
+ */
+export function getPageParam(value, type, pageParams) {
+    let {pageIndex, pageSize} = pageParams;
+    if (type === 0) {
+        pageIndex = value - 1;
+    } else {
+        pageSize = value.toLowerCase() !== 'all' && value || 1;
+        pageIndex = 0;
+    }
+    return {pageIndex, pageSize}
+
+}
