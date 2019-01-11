@@ -338,7 +338,7 @@ export default class QuotaPaginationTable extends Component {
                     </BpmButtonRecall>
 
 
-                    <Button colors="primary" className="ml5" size='sm' onClick={() => { self.printExcel() }}>
+                    {/* <Button colors="primary" className="ml5" size='sm' onClick={() => { self.printExcel() }}>
                         打印
                     </Button>
 
@@ -353,7 +353,7 @@ export default class QuotaPaginationTable extends Component {
                     >
                         <Button className="ml5" colors="primary" size='sm'>导入</Button>
                     </AcUpload>
-                    <AcExport {...exportProps} className="ml5" />
+                    <AcExport {...exportProps} className="ml5" /> */}
                 </div>
                 <PaginationTable
                     data={list}
