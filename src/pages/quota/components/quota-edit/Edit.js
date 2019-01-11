@@ -226,19 +226,19 @@ class Edit extends Component {
                 }
                 <Row className='detail-body'>
 
-                    <Col md={4} xs={6}>
-                        <Label>编码：</Label>
-                        <FormControl disabled={true}
-                                     {...getFieldProps('coding', {
-                                         validateTrigger: 'onBlur',
-                                         initialValue: coding || '',
-                                         rules: [{
-                                             type: 'string', required: false, pattern: /\S+/ig, message: '请输入编码',
-                                         }],
-                                     })}
-                        />
-                        <span className='error'>{getFieldError('coding')}</span>
-                    </Col>
+                    {/*<Col md={4} xs={6}>*/}
+                        {/*<Label>编码：</Label>*/}
+                        {/*<FormControl disabled={true}*/}
+                                     {/*{...getFieldProps('coding', {*/}
+                                         {/*validateTrigger: 'onBlur',*/}
+                                         {/*initialValue: coding || '',*/}
+                                         {/*rules: [{*/}
+                                             {/*type: 'string', required: false, pattern: /\S+/ig, message: '请输入编码',*/}
+                                         {/*}],*/}
+                                     {/*})}*/}
+                        {/*/>*/}
+                        {/*<span className='error'>{getFieldError('coding')}</span>*/}
+                    {/*</Col>*/}
                     <Col md={4} xs={6}>
                         <Label>单位：</Label>
                         <Select disabled={btnFlag == 2}
@@ -350,7 +350,7 @@ class Edit extends Component {
                     </Col>
                     <Col md={12} xs={12}>
                         <Label>工艺做法：</Label>
-                        <FormControl disabled={btnFlag == 2 || false} componentClass='textarea'
+                        <FormControl disabled={btnFlag == 2 || false} componentClass='textarea' className="quote-textarea"
                                      {...getFieldProps('practice', {
                                              validateTrigger: 'onBlur',
                                              initialValue: practice || '',
@@ -365,7 +365,7 @@ class Edit extends Component {
 
                     <Col md={12} xs={12}>
                         <Label>计算规则：</Label>
-                        <FormControl disabled={btnFlag == 2 || false} componentClass='textarea'
+                        <FormControl disabled={btnFlag == 2 || false} componentClass='textarea' className="quote-textarea"
                                      {...getFieldProps('calculateRule', {
                                              validateTrigger: 'onBlur',
                                              initialValue: calculateRule || '',
@@ -378,6 +378,7 @@ class Edit extends Component {
                         <span className='error'>{getFieldError('calculateRule')}</span>
                     </Col>
                 </Row>
+                <div style={{clear:'both'}}></div>
             </div>
         )
     }
