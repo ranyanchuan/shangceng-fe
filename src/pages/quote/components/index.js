@@ -29,7 +29,7 @@ class Quote extends Component {
 
   render() {
     const _this = this;
-    const {subjectObj, subjectModalObj,subjectModalLoading, partObj, quoteIndex, partIndex, quoteList,designbCenter, projectAddress} = _this.props;
+    const {subjectObj, subjectModalObj,subjectModalLoading, partObj, quoteIndex, partIndex, quoteList,ppdesignCenter, ppcusaddress} = _this.props;
 
     return (
       <div className="quote">
@@ -59,8 +59,11 @@ class Quote extends Component {
                 onSave = {(ref) => {
                     console.log(ref);
                     actions.quote.updateState({
-                        designbCenter:ref[0]["desgin_centor"],
-                        projectAddress:ref[0]["address"]
+                      ppcusname:ref[0]["name"],// 客户名称
+                      ppcusid:ref[0]["id"],//   客户id
+                      ppcusno:ref[0]["refcode"], //  客户编码
+                      ppdesignCenter:ref[0]["desgin_centor"],
+                      ppcusaddress:ref[0]["address"]
                     });
                     actions.quote.getQuotes({id:ref[0].id})
                 }}
@@ -77,11 +80,11 @@ class Quote extends Component {
             </Col>
             <Col md={4} xs={12} sm={12}>
               设计中心：
-              <FormControl value={designbCenter} readOnly />
+              <FormControl value={ppdesignCenter} readOnly />
             </Col>
             <Col md={4} xs={12} sm={12}>
               项目地址：
-              <FormControl value={projectAddress} readOnly />
+              <FormControl value={ppcusaddress} readOnly />
             </Col>
           </Row>
         </div>
