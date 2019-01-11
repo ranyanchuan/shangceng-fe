@@ -104,7 +104,7 @@ class Part extends Component {
                             });
                             actions.quote.getReferParts();
                         }}
-                        disabled = { pid ? false : true }
+                        disabled = { partObj.partVal ? false : true }
                     >
                         参考其他部位
                     </Button>

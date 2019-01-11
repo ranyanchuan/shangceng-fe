@@ -41,7 +41,6 @@ class ReferModal extends Component{
     ];
 
     getSelectedDataFunc = (selectData) => {
-        console.log(selectData)
         this.setState({selectData});
     }
 
@@ -51,16 +50,25 @@ class ReferModal extends Component{
     }
 
     onConfirm = () => {
-        const selectData = this.state;
-        console.log("22222222",this.props)
+        const {selectData} = this.state;
         const {partObj:{partVal}, pid} = this.props;
-        console.log(partVal);
+        console.log("partVal",partVal);
+
+        if(selectData.length == 0){
+            Warning("未选择参照部位");
+            return;
+        }
 
         if(selectData.length > 1){
             Warning("只能参照一个部位");
             return;
         }
         console.log("确认")
+        actions.quote.saveReferPart({
+            mainId:pid,
+            positionName:partVal,
+            partId:selectData[0].id
+        })
     }
 
     render(){
