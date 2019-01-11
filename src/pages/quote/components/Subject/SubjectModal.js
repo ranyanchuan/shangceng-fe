@@ -63,6 +63,10 @@ class SubjectModal extends Component {
             dataIndex: "price",
             key: "price",
             width: 80,
+            className: 'column-number-right ', // 靠右对齐
+            render: (text, record, index) => {
+                return (<span>{(typeof text)==='number'? text.toFixed(2):""}</span>)
+            }
         },
         {
             title: "单位",
@@ -111,9 +115,8 @@ class SubjectModal extends Component {
                 <Modal.Body >
                     <Grid
                         data={subjectModalObj.list}
-                        rowKey={(r, i) => r.index}
+                        rowKey={(r, i) => r.id}
                         columns={this.detailColumn}
-
                         paginationObj={paginationObj}
                         getSelectedDataFunc={this.getSelectedDataFunc}
                         showHeaderMenu={false}

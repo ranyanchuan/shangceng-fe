@@ -75,6 +75,7 @@
     "react-hot-keys": "^1.2.0",
     "react-loadable": "^5.4.0",
     "react-transition-group": "^2.4.0",
+    "ref-multiple-table": "^0.2.0-beta",
     "tinper-bee": "^1.6.5",
     "yyuap-bpm": "^0.3.20",
     "yyuap-ref": "1.1.34"

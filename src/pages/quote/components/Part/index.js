@@ -119,9 +119,7 @@ class Part extends Component {
                         console.log(record)
                         actions.quote.updateState({partIndex: index});
                     }}
-                    emptyText={() => {
-                        return "暂无部位";
-                    }}
+                    getSelectedDataFunc={() => {}}
                 />
                 <Modal show={this.state.showModal} backdrop={true} onHide={this.close}>
                     <Modal.Header closeButton>
