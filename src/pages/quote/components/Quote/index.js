@@ -34,7 +34,7 @@ class QuoteTable extends Component {
   ];
 
   render() {
-    const { quoteList, quoteIndex } = this.props;
+    const { quoteList, quoteIndex,showLoading } = this.props;
 
     const paginationObj = {
       // 分页
@@ -59,6 +59,7 @@ class QuoteTable extends Component {
             actions.quote.updateState({ quoteIndex: index, pid:record.id });
             actions.quote.getParts({id:record.id})
           }}
+          // loading={{show: showLoading, loadingType: "line"}}
         />
       </div>
     );

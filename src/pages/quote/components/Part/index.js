@@ -68,7 +68,6 @@ class Part extends Component {
     render() {
         const _this = this;
         const {partObj, partIndex, pid, otherParts} = this.props;
-        debugger;
         console.log("partIndex",partIndex)
         const paginationObj = {
             // 分页
