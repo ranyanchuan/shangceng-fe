@@ -29,17 +29,7 @@ class Quote extends Component {
 
   render() {
     const _this = this;
-    const {
-      subjectObj,
-      subjectModalObj,
-      partObj,
-      quoteIndex,
-      partIndex,
-      quoteList,
-      designbCenter,
-      projectAddress
-
-    } = _this.props;
+    const {subjectObj, subjectModalObj,subjectModalLoading, partObj, quoteIndex, partIndex, quoteList,designbCenter, projectAddress} = _this.props;
 
     return (
       <div className="quote">
@@ -128,6 +118,7 @@ class Quote extends Component {
                 <Subject
                   subjectObj={subjectObj}
                   subjectModalObj={subjectModalObj}
+                    subjectModalLoading={subjectModalLoading}
                 />
               </div>
             </Col>

@@ -7,6 +7,8 @@ import * as api from "./service";
 import {
     processData,
     deepClone,
+    structureObj,
+    initStateObj,
     uuid
 } from "utils";
 import moment from 'moment';
@@ -186,68 +188,13 @@ export default {
             totalPages: 1,
             total: 3,
         },
+        subjectModalLoading:false,
         subjectModalObj: {
-            list: [
-                {
-                    "index":1,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                },{
-                    "index":2,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                },{
-                    "index":3,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                },{
-                    "index":4,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                },{
-                    "index":5,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                },{
-                    "index":6,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                }
-            ],
-            pageIndex: 1,
+            list: [],
+            pageIndex: 0,
             pageSize: 10,
-            totalPages: 1,
-            total: 3,
+            totalPages: 0,
+            total: 0,
         },
     },
     reducers: {
@@ -316,7 +263,32 @@ export default {
             actions.quote.updateState({
                 partObj
             });
-        }
+        },
+
+
+        /**
+         * 加载列表数据
+         * @param {*} param
+         * @param {*} getState
+         */
+        async loadQuotaListModal(param = {}, getState) {
+            // 正在加载数据，显示加载 Loading 图标
+            actions.quote.updateState({subjectModalLoading: true});
+            const {result} = processData(await api.getQuota(param));  // 调用 getList 请求数据
+            const {data}=result;
+            actions.quote.updateState({subjectModalLoading: false});
+            if (data) {
+                const subjectModalObj = structureObj(data, param);
+                actions.quote.updateState({subjectModalObj}); // 更新数据和查询条件
+            } else {
+                // 如果请求出错,数据初始化
+                const {subjectModalObj} = getState().quote;
+                actions.quote.updateState({subjectModalObj: initStateObj(subjectModalObj)});
+            }
+            debugger
+        },
+
+
 
     }
 };

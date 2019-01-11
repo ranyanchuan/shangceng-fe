@@ -16,43 +16,53 @@ export const Warning = (msg) => {
 }
 /**
  * 数据返回统一处理函数
- * @param {*} response 
+ * @param {*} response
  * @param {*} successMsg 成功提示
  */
-export const processData = (response,successMsg) => {
-    if(typeof response != 'object') {
-        Error('数据返回出错：1、请确保服务运行正常；2、请确保您的前端工程代理服务正常；3、请确认您已在本地登录过应用平台');
-        return;
-    }
-    if(response.status=='401'){
-        Error(`错误:${(response.data.msg)}`);
-        return;
-    }
-    if(response.status=='200'){
-        let data=response.data;
-        let repMsg = data.success;
-        if(repMsg=='success'){
-            if(successMsg){
-                success(successMsg);
-            }
-            return data.detailMsg.data;
-        }else if(repMsg=='fail_field'){
-            Error(`错误:${(data && data.detailMsg && convert(data.detailMsg.msg)) || '数据返回出错'}`);
-        }else {
-            Error(`错误:${convert(data.message)}`);
-            return;
+export const processData = (response, successMsg) => {
+    let result={};
+    try {
+        if (typeof response != 'object') {
+            Error('数据返回出错：1、请确保服务运行正常；2、请确保您的前端工程代理服务正常；3、请确认您已在本地登录过应用平台');
+            throw new Error('数据返回出错：1、请确保服务运行正常；2、请确保您的前端工程代理服务正常；3、请确认您已在本地登录过应用平台')
         }
-    }else{
-        Error('请求错误');
-        return;
+        if (response.status == '401') {
+            Error(`错误:${(response.data.msg)}`);
+            throw new Error(`错误:${(response.data.msg)}`);
+        }
+        if (response.status == '200') {
+            let data = response.data;
+            let repMsg = data.success;
+            if (repMsg == 'success') {
+                if (successMsg) {
+                    success(successMsg);
+                }
+                result.status = repMsg;
+                // 删除成功没有 data 值
+                result.data = data.detailMsg.data || {};
+                return {result};
+            } else if (repMsg == 'fail_field') {
+                Error(`错误:${(data && data.detailMsg && convert(data.detailMsg.msg)) || '数据返回出错'}`);
+                throw new Error(`错误:${(data && data.detailMsg && convert(data.detailMsg.msg)) || '数据返回出错'}`)
+            } else {
+                Error(`错误:${convert(data.message)}`);
+                throw new Error(`错误:${convert(data.message)}`);
+            }
+        } else {
+            Error('请求错误');
+        }
+
+    } catch (e) {
+        return {result};
     }
 }
 
+
 /**
  * param拼接到url地址上
- * @param {*} url 
+ * @param {*} url
  * @param {*} params
- * @param {*} prefix 
+ * @param {*} prefix
  */
 export const paramToUrl = (url,params,prefix) =>{
     if(!prefix)prefix='';
@@ -73,7 +83,7 @@ export const paramToUrl = (url,params,prefix) =>{
 export const convert = (text) => {
     let element = document.createElement("p");
     element.innerHTML = text;
-    let output = element.innerText || element.textContent; 
+    let output = element.innerText || element.textContent;
     console.log("output",output);
     element = null;
     return output;
@@ -149,4 +159,44 @@ export function uuid() {
     s[18] = '-';
     s[23] = '-';
     return s.join('');
+}
+
+
+/**
+ * 对请求回来带有分页的数据 解构，拼装
+ * @param obj
+ * @param param
+ * @returns {{list: *, pageIndex: *, totalPages: *, total: *, pageSize: *}}
+ */
+export function structureObj(obj, param) {
+    const {content, number, totalPages, totalElements, size} = obj;
+    let {pageSize} = param;
+    if (!pageSize) {
+        pageSize = size;
+    }
+    return {
+        list: content,
+        pageIndex: number + 1,
+        totalPages: totalPages,
+        total: totalElements,
+        pageSize,// 结构请求的pageSize,
+    };
+
+}
+
+/**
+ * 初始化 state 里的带有分页的 obj
+ * @param obj
+ * @returns {{list: Array, pageIndex: number, totalPages: number, total: number, pageSize: *}}
+ */
+export function initStateObj(obj) {
+    const {pageSize} = obj;
+    return {
+        list: [],
+        pageIndex: 0,
+        totalPages: 0,
+        total: 0,
+        pageSize,
+    };
+
 }

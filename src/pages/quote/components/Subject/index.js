@@ -167,7 +167,7 @@ class Subject extends Component {
 
     render() {
         const _this = this;
-        const {subjectObj, subjectModalObj} = _this.props;
+        const {subjectObj, subjectModalObj,subjectModalLoading} = _this.props;
         const {addSubModalVisible, showPopAlert} = _this.state;
 
         const paginationObj = {   // 分页
@@ -237,6 +237,7 @@ class Subject extends Component {
                     modalVisible={addSubModalVisible}
                     subjectModalObj={subjectModalObj}
                     onCloseModal={_this.onCloseModal}
+                    subjectModalLoading={subjectModalLoading}
                 />
             </div>
         )
