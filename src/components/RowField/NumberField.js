@@ -127,7 +127,7 @@ class NumberField extends Component {
             {required && <div className="triangle-redline"></div>}
             <InputNumber
                 className={className}
-                value={value}
+                value={typeof value === 'number' ? value : 0.00}
                 onChange={this.handlerChange}
                 iconStyle={iconStyle}
                 max={max}
