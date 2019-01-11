@@ -102,8 +102,9 @@ class Part extends Component {
                             this.setState({
                                 showReferModal: true
                             });
+                            actions.quote.getReferParts();
                         }}
-                        disabled = { pid ? false : true }
+                        disabled = { partObj.partVal ? false : true }
                     >
                         参考其他部位
                     </Button>
@@ -130,7 +131,7 @@ class Part extends Component {
                     }}
                     getSelectedDataFunc={() => {}}
                 />
-               <ReferModal otherParts={otherParts} showReferModal={this.state.showReferModal} closeModal={this.closeModal}/>
+               <ReferModal {...this.props} showReferModal={this.state.showReferModal} closeModal={this.closeModal}/>
             </div>
         );
     }

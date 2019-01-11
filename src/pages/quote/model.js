@@ -286,12 +286,18 @@ export default {
             }
         },
 
-        //
-        async getReferParts(param, getState) {
-            const {pid} = getState().quote;
-            const res = processData(await api.getParts({id: pid}));
-            console.log("getReferParts", res)
-        }
+        //获取参考部位
+        async getReferParts(param,getState){
+            const { pid} = getState().quote;
+            const res = processData(await api.getParts({id:pid}));
+            actions.quote.updateState({
+                otherParts:res.result.data
+            })
+        },
 
+        //保存参考部位
+        async saveReferPart(param,getState){
+            console.log(param)
+        }
     }
 };
