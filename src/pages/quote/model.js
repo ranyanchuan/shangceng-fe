@@ -65,6 +65,8 @@ export default {
             totalPages: 0,
             total: 0,
         },
+
+        otherParts:[]//参照其他部位列表
     },
     reducers: {
         /**
@@ -265,6 +267,12 @@ export default {
             }
         },
 
+        //
+        async getReferParts(param,getState){
+            const { pid} = getState().quote;
+            const res = processData(await api.getParts({id:pid}));
+            console.log("getReferParts",res)
+        }
 
     }
 };

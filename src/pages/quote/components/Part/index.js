@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {actions} from "mirrorx";
 import {Button, Table, FormControl, Modal} from "tinper-bee";
 import Grid from "components/Grid";
+import ReferModal from './referModal'
 
 import "bee-complex-grid/build/Grid.css";
 import "bee-pagination/build/Pagination.css";
@@ -12,7 +13,7 @@ class Part extends Component {
     constructor() {
         super();
         this.state = {
-            showModal: false
+            showReferModal:false
         };
     }
 
@@ -58,15 +59,15 @@ class Part extends Component {
         },
     ];
 
-    close = () => {
+    closeModal = () => {
         this.setState({
-            showModal: false
+            showReferModal: false
         });
     };
 
     render() {
         const _this = this;
-        const {partObj, partIndex, pid} = this.props;
+        const {partObj, partIndex, pid, otherParts} = this.props;
         console.log("partIndex",partIndex)
         const paginationObj = {
             // 分页
@@ -99,7 +100,7 @@ class Part extends Component {
                         size="sm"
                         onClick={() => {
                             this.setState({
-                                showModal: true
+                                showReferModal: true
                             });
                         }}
                         disabled = { pid ? false : true }
@@ -129,15 +130,7 @@ class Part extends Component {
                     }}
                     getSelectedDataFunc={() => {}}
                 />
-                <Modal show={this.state.showModal} backdrop={true} onHide={this.close}>
-                    <Modal.Header closeButton>
-                        <Modal.Title> 我来组成头部 </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body/>
-                    <Modal.Footer>
-                        <Button onClick={this.close}> 关闭 </Button>
-                    </Modal.Footer>
-                </Modal>
+               <ReferModal otherParts={otherParts} showReferModal={this.state.showReferModal} closeModal={this.closeModal}/>
             </div>
         );
     }
