@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { actions } from "mirrorx";
 import { Icon, Loading, Row, Col, Button, FormControl } from "tinper-bee";
 import Select from "bee-select";
-import RefMultipleTableWithInput  from "ref-multiple-table";
+import RefMultipleTableWithInput from "ref-multiple-table";
 
 // import Grid from 'components/Grid';
 import Subject from "./Subject";
@@ -53,25 +53,25 @@ class Quote extends Component {
                 strictMode={true}
                 param={{
                   //url请求参
-                  refCode: "post_level" //test_common||test_grid||test_tree||test_treeTable
+                  refCode: "poc_customer" //test_common||test_grid||test_tree||test_treeTable
                 }}
                 refModelUrl={{
-                  tableBodyUrl: "/iuap_walsin_demo/common-ref/blobRefTreeGrid", //表体请求
-                  refInfo: "/iuap_walsin_demo/common-ref/refInfo" //表头请求
+                  tableBodyUrl: `${GROBAL_HTTP_CTX}/common-ref/blobRefTreeGrid`, //表体请求
+                  refInfo: `${GROBAL_HTTP_CTX}/common-ref/refInfo` //表头请求
                 }}
-                matchUrl={"/iuap_walsin_demo/common-ref/matchPKRefJSON"}
-                filterUrl={"/iuap_walsin_demo/common-ref/filterRefJSON"}
+                matchUrl={`${GROBAL_HTTP_CTX}/common-ref/matchPKRefJSON`}
+                filterUrl={`${GROBAL_HTTP_CTX}/common-ref/filterRefJSON`}
                 valueField={"refpk"}
                 displayField={"{refname}-{refpk}"}
-                // {...getFieldProps("valueField", {
-                //   initialValue: '{"refname":"高级-T3","refpk":"level5"}',
-                //   rules: [
-                //     {
-                //       message: "请输入姓名",
-                //       pattern: /[^{"refname":"","refpk":""}|{"refpk":"","refname":""}]/
-                //     }
-                //   ]
-                // })}
+              // {...getFieldProps("valueField", {
+              //   initialValue: '{"refname":"高级-T3","refpk":"level5"}',
+              //   rules: [
+              //     {
+              //       message: "请输入姓名",
+              //       pattern: /[^{"refname":"","refpk":""}|{"refpk":"","refname":""}]/
+              //     }
+              //   ]
+              // })}
               />
             </Col>
             <Col md={4} xs={12} sm={12}>
