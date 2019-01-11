@@ -277,17 +277,17 @@ class Subject extends Component {
                         <div className="end">税金: 110.00元</div>
                     </div>
                     <div className='table-header'>
-                        <Button shape="border" colors="success" size="sm"
+                        <Button  shape="border" colors="success" size="sm"
                                 onClick={this.onCheckSubject}
                         >
                             新增项目
                         </Button>
-                        <Button shape="border" colors="success" size="sm" className="del-btn"
+                        <Button  shape="border" colors="success" size="sm" className="del-btn"
                                 onClick={this.onSaveSubject}
                         >
                             保存项目
                         </Button>
-                        <Button shape="border" colors="success" size="sm" className="del-btn"
+                        <Button  shape="border" colors="success" size="sm" className="del-btn"
                                 onClick={this.onUpdateSubject}
                         >
                             修改项目
