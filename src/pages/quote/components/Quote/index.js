@@ -12,23 +12,23 @@ class QuoteTable extends Component {
   columns = [
     {
       title: "报价名称",
-      dataIndex: "quoteName",
-      key: "quoteName",
+      dataIndex: "quotename",
+      key: "quotename",
       width: 100
     },
     {
       title: "报价金额",
-      dataIndex: "quoteAmount",
-      key: "quoteAmount",
+      dataIndex: "ppTotalAmount",
+      key: "ppTotalAmount",
       width: 100
     },
     {
       title: "状态",
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "usedFlag",
+      key: "usedFlag",
       width: 100,
       render(record, text, index) {
-        return record === 0 ? "未使用" : "已使用";
+        return record === "0" ? "未使用" : "已使用";
       }
     }
   ];
