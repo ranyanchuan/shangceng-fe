@@ -22,7 +22,7 @@ class Quote extends Component {
 
     render() {
         const _this = this;
-        const {partObj, quoteIndex, partIndex, quoteList, ppdesignCenter, ppcusaddress} = _this.props;
+        const {partObj, quoteIndex, partIndex, quoteList, ppdesignCenter, ppcusaddress, pid} = _this.props;
 
         return (
             <div className="quote">
@@ -56,7 +56,14 @@ class Quote extends Component {
                                         ppcusid: ref[0]["id"],//   客户id
                                         ppcusno: ref[0]["refcode"], //  客户编码
                                         ppdesignCenter: ref[0]["desgin_centor"],
-                                        ppcusaddress: ref[0]["address"]
+                                        ppcusaddress: ref[0]["address"],
+                                        partObj:{
+                                          list:[],
+                                          partVal:''
+                                        },
+                                        quoteIndex:-1,
+                                        partIndex:-1,
+                                        pid:''
                                     });
                                     actions.quote.getQuotes({id: ref[0].id})
                                 }}
@@ -106,7 +113,7 @@ class Quote extends Component {
                                 <QuoteTable quoteList={quoteList} quoteIndex={quoteIndex}/>
                             </div>
                             <div className="create-part">
-                                <Part partObj={partObj} partIndex={partIndex}/>
+                                <Part partObj={partObj} pid={pid} partIndex={partIndex}/>
                             </div>
                         </Col>
                         <Col md={8} xs={12} sm={12}>

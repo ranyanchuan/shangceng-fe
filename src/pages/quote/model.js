@@ -175,7 +175,8 @@ export default {
             console.log(response)
             _partObj.list = response.result.data;
             actions.quote.updateState({
-                partObj:_partObj
+                partObj:_partObj,
+                partIndex:0
             });
         },
 

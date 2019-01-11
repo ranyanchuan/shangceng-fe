@@ -16,7 +16,7 @@ class Part extends Component {
         };
     }
 
-    columns = [
+    columns1 = [
         {
             title: "序号",
             dataIndex: "index",
@@ -32,11 +32,11 @@ class Part extends Component {
             key: "e",
             width: 50,
             render(text, record, index) {
-                const _this = this;
                 return (
                     <div className='operation-btn'>
-                        <i size='sm' className='uf uf-del' onClick={() => {
+                        <i size='sm' className='uf uf-del' onClick={(e) => {
                             console.log("删除部位",record)
+                            e.stopPropagation()
                             actions.quote.deletePart(record.id)
                         }}></i>
                     </div>
@@ -66,8 +66,8 @@ class Part extends Component {
 
     render() {
         const _this = this;
-        const {partObj, partIndex} = this.props;
-
+        const {partObj, partIndex, pid} = this.props;
+        console.log("partIndex",partIndex)
         const paginationObj = {
             // 分页
             // horizontalPosition: "right",
@@ -89,6 +89,7 @@ class Part extends Component {
                         colors="primary"
                         size="sm"
                         onClick={() => actions.quote.addPart()}
+                        disabled = { pid ? false : true }
                     >
                         添加
                     </Button>
@@ -101,6 +102,7 @@ class Part extends Component {
                                 showModal: true
                             });
                         }}
+                        disabled = { pid ? false : true }
                     >
                         参考其他部位
                     </Button>
@@ -110,7 +112,7 @@ class Part extends Component {
                 </div>
                 <Grid
                     rowKey={(r, i) => r.id}
-                    columns={this.columns}
+                    columns={this.columns1}
                     data={partObj.list}
                     paginationObj={paginationObj}
                     showFilterMenu={true} //是否显示行过滤菜单
