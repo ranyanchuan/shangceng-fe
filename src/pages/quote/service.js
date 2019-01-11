@@ -8,6 +8,9 @@ const URL = {
     "GET_PARTS": `${GROBAL_HTTP_CTX}/pm_projectprice_m/getProjectPart`,//获取部位
     "SAVE_PART": `${GROBAL_HTTP_CTX}//pm_projectprice_m/savePart`,//添加部位
     "DELETE_PART": `${GROBAL_HTTP_CTX}/pm_projectprice_m/deletePart`,//删除部位
+    "ADD_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
+    "UPD_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
+    "DEL_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
 }
 
 /**
@@ -20,6 +23,41 @@ export const getQuota = (param) => {
         param
     });
 }
+
+/**
+ *
+ * @param {*} params
+ */
+export const addSubject = (param) => {
+    return request(URL.ADD_SUBJECT, {
+        method: "post",
+        data:param
+    });
+}
+
+/**
+ *
+ * @param {*} params
+ */
+export const updateSubject = (param) => {
+    return request(URL.UPD_SUBJECT, {
+        method: "post",
+        data:param
+    });
+}
+
+
+/**
+ *
+ * @param {*} params
+ */
+export const delSubject = (param) => {
+    return request(URL.DEL_SUBJECT, {
+        method: "post",
+        data:param
+    });
+}
+
 
 /**
  * 获取当前用户报价列表

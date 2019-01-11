@@ -42,160 +42,25 @@ export default {
         quoteIndex:-1,
         quoteList:[],
         partIndex:-1,
+
+        showLoading: false,
+        quoteIndex: 0,
+        quoteList: [],
+        partIndex: 0,
         partObj: {
             list: [],
             partVal: ''
         },
+
+        subjectListLoading: false,
         subjectObj: {
-            list: [
-                {
-                    "index":1,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "company":"company",
-                    "quantitie":10,
-                    "total":310,
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                    "_checked":false,
-                    "_status":"edit",
-                    "_edit":true,
-                },{
-                    "index":2,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "quantitie":10,
-                    "total":103,
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                    "_checked":false,
-                    "_status":"edit",
-                    "_edit":true,
-                },{
-                    "index":3,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "quantitie":10,
-                    "total":130,
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                    "_checked":false,
-                    "_status":"edit",
-                    "_edit":true,
-                },{
-                    "index":4,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "company":"company",
-                    "quantitie":10,
-                    "total":310,
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                    "_checked":false,
-                    "_status":"edit",
-                    "_edit":true,
-                },{
-                    "index":5,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "quantitie":10,
-                    "total":103,
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                    "_checked":false,
-                    "_status":"edit",
-                    "_edit":true,
-                },{
-                    "index":6,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "quantitie":10,
-                    "total":130,
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                    "_checked":false,
-                    "_status":"edit",
-                    "_edit":true,
-                },{
-                    "index":7,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "quantitie":10,
-                    "total":103,
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                    "_checked":false,
-                    "_status":"edit",
-                    "_edit":true,
-                },{
-                    "index":8,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "quantitie":10,
-                    "total":130,
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                    "_checked":false,
-                    "_status":"edit",
-                    "_edit":true,
-                },{
-                    "index":9,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "quantitie":10,
-                    "total":103,
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                    "_checked":false,
-                    "_status":"edit",
-                    "_edit":true,
-                },{
-                    "index":10,
-                    "projectName":"projectName",
-                    "price":"price",
-                    "unit":"unit",
-                    "practice":"practice",
-                    "quantitie":10,
-                    "total":130,
-                    "company":"company",
-                    "categoryname":"categoryname",
-                    "calculateRule":"calculateRule",
-                    "_checked":false,
-                    "_status":"edit",
-                    "_edit":true,
-                }
-            ],
-            pageIndex: 1,
+            list: [],
+            pageIndex: 2,
             pageSize: 10,
-            totalPages: 1,
-            total: 3,
+            totalPages: 0,
+            total: 0,
         },
-        subjectModalLoading:false,
+        subjectModalLoading: false,
         subjectModalObj: {
             list: [],
             pageIndex: 0,
@@ -317,7 +182,7 @@ export default {
             // 正在加载数据，显示加载 Loading 图标
             actions.quote.updateState({subjectModalLoading: true});
             const {result} = processData(await api.getQuota(param));  // 调用 getList 请求数据
-            const {data}=result;
+            const {data} = result;
             actions.quote.updateState({subjectModalLoading: false});
             if (data) {
                 const subjectModalObj = structureObj(data, param);
@@ -327,9 +192,70 @@ export default {
                 const {subjectModalObj} = getState().quote;
                 actions.quote.updateState({subjectModalObj: initStateObj(subjectModalObj)});
             }
-            debugger
         },
 
+        /**
+         * 加载列表数据
+         * @param {*} param
+         * @param {*} getState
+         */
+        async addSubject(param = {}, getState) {
+            // 正在加载数据，显示加载 Loading 图标
+            actions.quote.updateState({subjectModalLoading: true});
+            const {result} = processData(await api.addSubject(param), '添加成功');  // 调用 getList 请求数据
+            const {data=[]} = result;
+            actions.quote.updateState({subjectModalLoading: false});
+            return data;
+
+        },
+        /**
+         * 加载列表数据
+         * @param {*} param
+         * @param {*} getState
+         */
+        async updateSubject(param, getState) {
+            // 正在加载数据，显示加载 Loading 图标
+            actions.quote.updateState({subjectListLoading: true});
+            const {result} = processData(await api.updateSubject(param), '保存成功');  // 调用 getList 请求数据
+            const {status} = result;
+            actions.quote.updateState({subjectListLoading: false});
+            return status==='success'?true:false;
+        },
+        /**
+         * 加载列表数据
+         * @param {*} param
+         * @param {*} getState
+         */
+        async delSubject(param, getState) {
+            // 正在加载数据，显示加载 Loading 图标
+            actions.quote.updateState({subjectListLoading: true});
+            const {result} = processData(await api.delSubject(param), '删除成功');  // 调用 getList 请求数据
+            const {status} = result;
+            actions.quote.updateState({subjectListLoading: false});
+            return status==='success'?true:false;
+        },
+
+
+        /**
+         * 加载列表数据
+         * @param {*} param
+         * @param {*} getState
+         */
+        async loadSubjectList(param = {}, getState) {
+            // 正在加载数据，显示加载 Loading 图标
+            actions.quote.updateState({subjectListLoading: true});
+            const {result} = processData(await api.getQuota(param));  // 调用 getList 请求数据
+            const {data} = result;
+            actions.quote.updateState({subjectListLoading: false});
+            if (data) {
+                const subjectObj = structureObj(data, param);
+                actions.quote.updateState({subjectObj}); // 更新数据和查询条件
+            } else {
+                // 如果请求出错,数据初始化
+                const {subjectObj} = getState().quote;
+                actions.quote.updateState({subjectObj: initStateObj(subjectObj)});
+            }
+        },
 
 
     }
