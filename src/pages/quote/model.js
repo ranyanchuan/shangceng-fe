@@ -43,10 +43,6 @@ export default {
         quoteList:[],
         partIndex:-1,
 
-        showLoading: false,
-        quoteIndex: 0,
-        quoteList: [],
-        partIndex: 0,
         partObj: {
             list: [],
             partVal: ''
