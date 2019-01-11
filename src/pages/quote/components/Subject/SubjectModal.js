@@ -25,7 +25,7 @@ class SubjectModal extends Component {
         const {modalVisible} = this.props;
         const {modalVisible: nextModalVisible} = nextProps;
         if (nextModalVisible && modalVisible  !== nextModalVisible) {
-
+            actions.quote.loadQuotaListModal();
         }
     }
 
@@ -50,11 +50,12 @@ class SubjectModal extends Component {
             dataIndex: "index",
             key: "index",
             width: 60,
+            render: (text, record, index) => <div>{index+1}</div>
         },
         {
             title: "项目名称",
-            dataIndex: "projectName",
-            key: "projectName",
+            dataIndex: "categorynameEnumValue",
+            key: "categorynameEnumValue",
             width: 100,
         },
         {
@@ -65,15 +66,15 @@ class SubjectModal extends Component {
         },
         {
             title: "单位",
-            dataIndex: "unit",
-            key: "unit",
+            dataIndex: "unitEnumValue",
+            key: "unitEnumValue",
             width: 80,
         },
         {
             title: "工业说明",
             dataIndex: "practice",
             key: "practice",
-            width: 100,
+            width: 400,
         },
         {
             title: "计算方法",
@@ -87,7 +88,7 @@ class SubjectModal extends Component {
     render() {
 
         let _this = this;
-        const { modalVisible,subjectModalObj} = _this.props;
+        const { modalVisible,subjectModalObj,subjectModalLoading} = _this.props;
         const paginationObj = {   // 分页
             horizontalPosition: "left",
             verticalPosition: 'bottom',
@@ -97,10 +98,13 @@ class SubjectModal extends Component {
             freshData: _this.freshData,
             onDataNumSelect: _this.onDataNumSelect,
             showJump:false,
-
         }
+
+
+        console.log("subjectModalObj",subjectModalObj)
+
         return (
-            <Modal show={modalVisible } size='lg' onHide={ this.onClickClose }>
+            <Modal show={modalVisible } size='xlg' onHide={ this.onClickClose }>
                 <Modal.Header closeButton>
                     <Modal.Title >项目名称</Modal.Title>
                 </Modal.Header >
@@ -116,7 +120,7 @@ class SubjectModal extends Component {
                         columnFilterAble={false}
                         emptyText={() => <Icon style={{"fontSize": "60px"}} type="uf-nodata"/>}
                         shouJump={false}
-                        // loading={{ show: (!showLoading && showDetailLoading), loadingType: "line" }}
+                        loading={{ show:subjectModalLoading, loadingType: "line" }}
                     />
                 </Modal.Body>
                 <Modal.Footer className="footer">
