@@ -53,9 +53,10 @@ class QuoteTable extends Component {
           rowClassName={(record, index, indent) => {
             return quoteIndex === index ? "selected" : "";
           }}
+          scroll={{ y: 200 }}
           onRowClick={(record, index) => {
             console.log(record)
-            actions.quote.updateState({ quoteIndex: index, pid:record.id }); 
+            actions.quote.updateState({ quoteIndex: index, pid:record.id });
             actions.quote.getParts({id:record.id})
           }}
         />
