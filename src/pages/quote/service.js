@@ -3,16 +3,27 @@ import request from "utils/request";
 const URL = {
     "GET_DETAIL": `${GROBAL_HTTP_CTX}/quota/list`,
     "GET_QUOTES": `${GROBAL_HTTP_CTX}/pm_projectprice_m/getProjectPrice`,
-    "GET_QUOTA":  `${GROBAL_HTTP_CTX}/quota/list`,
+    "SEL_QUOTA":  `${GROBAL_HTTP_CTX}/quota/list`,
+    "GET_QUOTA":  `${GROBAL_HTTP_CTX}//pm_projectprice_t1/list`,
     "SAVE_QUOTE": `${GROBAL_HTTP_CTX}/pm_projectprice_m/save`,//保存报价
     "GET_PARTS": `${GROBAL_HTTP_CTX}/pm_projectprice_m/getProjectPart`,//获取部位
     "SAVE_PART": `${GROBAL_HTTP_CTX}//pm_projectprice_m/savePart`,//添加部位
     "DELETE_PART": `${GROBAL_HTTP_CTX}/pm_projectprice_m/deletePart`,//删除部位
-    "ADD_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
+    "ADD_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_m/savePart`,
     "UPD_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
     "DEL_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
 }
 
+/**
+ * 获取主列表
+ * @param {*} params
+ */
+export const selectQuota = (param) => {
+    return request(URL.SEL_QUOTA, {
+        method: "get",
+        param
+    });
+}
 /**
  * 获取主列表
  * @param {*} params

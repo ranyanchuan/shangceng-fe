@@ -35,7 +35,7 @@ export default {
         ppcusno:'', //  客户编码
         ppcusaddress:'', //项目地址
         ppdesignCenter:'',// 设计中心
-        
+
         pid:'',// 报价主表id
         slectedPartId:'',//选中部位的id
 
@@ -142,7 +142,7 @@ export default {
                 Warning("请输入部位名称")
                 return;
             };
-            
+
             const res = processData(await api.savePart({
                 cusid:ppcusid,
                 cusCode:ppcusno,
@@ -181,7 +181,7 @@ export default {
         async loadQuotaListModal(param = {}, getState) {
             // 正在加载数据，显示加载 Loading 图标
             actions.quote.updateState({subjectModalLoading: true});
-            const {result} = processData(await api.getQuota(param));  // 调用 getList 请求数据
+            const {result} = processData(await api.selectQuota(param));  // 调用 getList 请求数据
             const {data} = result;
             actions.quote.updateState({subjectModalLoading: false});
             if (data) {

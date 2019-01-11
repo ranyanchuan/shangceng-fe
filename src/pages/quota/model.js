@@ -63,8 +63,9 @@ export default {
                 param = {}
             }
             // 调用 getList 请求数据
-            let res = processData(await api.getList(param));
-            actions.quota.updateState({  showLoading:false })
+            let {result} = processData(await api.getList(param));
+            actions.quota.updateState({  showLoading:false });
+            const {data:res}=result;
             if (res) {
                 if(res.content&&res.content.length){
                     for(let i=0;i<res.content.length;i++){
@@ -136,7 +137,8 @@ export default {
             actions.quota.updateState({
               showLoading:true
             })
-            let res = processData(await api.saveQuota(param),'保存成功');
+            let {result} = processData(await api.saveQuota(param),'保存成功');
+            const {data:res}=result;
             console.log("保存信息",res);
             if(res){
                window.history.go(-1);
@@ -153,7 +155,8 @@ export default {
         },
 
         async printExcel(param) {
-            let res=processData(await api.queryPrintTemplateAllocate(param.queryParams),'');
+            let {result}=processData(await api.queryPrintTemplateAllocate(param.queryParams),'');
+            const {data:res}=result;
             if(!res || !res.res_code) return false;
             await api.printExcel({
                 tenantId: 'tenant',
@@ -163,7 +166,7 @@ export default {
                 sendType: 'post'
             })
         },
-        
+
         async exportExcel(param) {
             api.exportExcel(param || {});
         },

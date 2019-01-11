@@ -29,11 +29,14 @@ class Subject extends Component {
 
 
     componentDidMount() {
-        actions.quote.loadSubjectList(); // 查询默认条件
+        // actions.quote.loadSubjectList(); // 查询默认条件
+
     }
 
-    getQuery=()=>{
-        actions.quote.loadSubjectList(); // 查询默认条件
+    getQuery=(param={})=>{
+        const {slectedPartId,pid}=this.props;
+        param.search_pid=slectedPartId;
+        actions.quote.loadSubjectList(param); // 查询默认条件
     }
 
 
@@ -96,14 +99,11 @@ class Subject extends Component {
      * @param {string} tableName 分页 table 名称
      */
     onPageSelect = (value, type) => {
-        let searchParam = {};
         let {subjectObj} = this.props;
         let {pageIndex, pageSize} = getPageParam(value, type,subjectObj);
-        searchParam.pageSize = pageSize;
-        searchParam.pageIndex = pageIndex;
-        actions.quote.loadSubjectList(searchParam);
+        let param = {pageSize,pageIndex};
+        this.getQuery(param);
     }
-
 
 
     detailColumn = [
@@ -249,10 +249,10 @@ class Subject extends Component {
 
     render() {
         const _this = this;
-        const {subjectObj, subjectModalObj,subjectModalLoading} = _this.props;
+        const {subjectObj, subjectModalObj,subjectModalLoading,subjectListLoading} = _this.props;
         const {addSubModalVisible, showPopAlert} = _this.state;
+        const {slectedPartId,pid}=_this.props;
 
-        console.log("subjectObj",subjectObj)
 
         const paginationObj = {   // 分页
             horizontalPosition: "right",
@@ -325,7 +325,7 @@ class Subject extends Component {
                     // syncHover={rowEditStatus}
                     getSelectedDataFunc={this.getSelectedDataFunc}
                     emptyText={() => <Icon style={{"fontSize": "60px"}} type="uf-nodata"/>}
-                    // loading={{ show: (!showLoading && showDetailLoading), loadingType: "line" }}
+                    loading={{ show: subjectListLoading, loadingType: "line" }}
                 />
                 <SubjectModal
                     modalVisible={addSubModalVisible}
@@ -333,7 +333,9 @@ class Subject extends Component {
                     onCloseModal={_this.onCloseModal}
                     subjectModalLoading={subjectModalLoading}
                     subjectObj={subjectObj}
-                />
+                    id={slectedPartId}
+                    pid={pid}
+            />
             </div>
         )
     }

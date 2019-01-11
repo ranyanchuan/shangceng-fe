@@ -41,6 +41,7 @@ class SubjectModal extends Component {
         const {selectData} = this.state;
         const {id, pid} = this.props;
         const param = {id, pid, selectData};
+        debugger
         const data = await actions.quote.addSubject(param);
         if (data && data.length > 0) {
             const subjectObj = deepClone(this.props.subjectObj);

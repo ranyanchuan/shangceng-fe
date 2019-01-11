@@ -116,6 +116,9 @@ class Part extends Component {
                     onRowClick={(record, index) => {
                         console.log(record)
                         actions.quote.updateState({partIndex: index, slectedPartId:record.id});
+                        // 查询项目
+                        const param={search_pid:record.id};
+                        actions.quote.loadSubjectList(param); // 查询默认条件
                     }}
                     getSelectedDataFunc={() => {}}
                 />
