@@ -65,7 +65,7 @@ export default {
             total: 0,
         },
 
-        otherParts:[]//参照其他部位列表
+        otherParts: []//参照其他部位列表
     },
     reducers: {
         /**
@@ -90,6 +90,11 @@ export default {
             if (status === 'success' && data.length) {
                 const {id} = data[0];
                 actions.quote.getParts({id});
+            } else {
+                // 如果请求出错,数据初始化
+                const {subjectObj} = getState().quote;
+                const partObj = {list: [], partVal: ""};
+                actions.quote.updateState({subjectObj: initStateObj(subjectObj), partObj,partIndex: 0});
             }
 
         },
@@ -130,6 +135,10 @@ export default {
             if (status === 'success' && data.length) {
                 const {id} = data[0];
                 actions.quote.loadSubjectList({search_pid: id});
+            }else{
+                // 如果请求出错,数据初始化
+                const {subjectObj} = getState().quote;
+                actions.quote.updateState({subjectObj: initStateObj(subjectObj)});
             }
 
         },
@@ -277,10 +286,10 @@ export default {
         },
 
         //
-        async getReferParts(param,getState){
-            const { pid} = getState().quote;
-            const res = processData(await api.getParts({id:pid}));
-            console.log("getReferParts",res)
+        async getReferParts(param, getState) {
+            const {pid} = getState().quote;
+            const res = processData(await api.getParts({id: pid}));
+            console.log("getReferParts", res)
         }
 
     }
