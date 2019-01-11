@@ -31,26 +31,26 @@ const proxyConfig = [
     enable: true,
     headers: {
       // 这是之前网页的地址，从中可以看到当前请求页面的链接。
-      "Referer": "http://172.20.53.249:8080"
+      "Referer": "http://172.20.52.242:8180"
     },
     // context，如果不配置，默认就是代理全部。
     router: [
       '/wbalone', '/iuap-example', '/eiap-plus/', '/newref/', '/print_service/', '/iuap-print/'
     ],
-    url: 'http://172.20.53.249:8080'
+    url: 'http://http://172.20.52.242:8180'
   },
   // 后台开发服务
   {
     enable: true,
     headers: {
       // 这是之前网页的地址，从中可以看到当前请求页面的链接。
-      "Referer": "http://127.0.0.1:8180"
+      "Referer": "http://172.20.52.242:8180"
     },
     // context，如果不配置，默认就是代理全部。
     router: [
       '/shangCeng'
     ],
-    url: 'http://127.0.0.1:8180'
+    url: 'http://172.20.52.242:8180'
   }
 ];
 

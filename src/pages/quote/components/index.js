@@ -83,7 +83,6 @@ class Quote extends Component {
                                     subjectObj={subjectObj}
                                     subjectModalObj={subjectModalObj}/>
                             </div>
-
                         </Col>
                     </Row>
                 </div>
