@@ -18,8 +18,7 @@ export const getQuota = (param) => {
 }
 
 export const getQuotes = (params) => {
-    console.log()
-    request(URL.GET_QUOTES,{
+    return request(URL.GET_QUOTES,{
         method: "get",
         param:params
     })
