@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { actions } from 'mirrorx';
-import { Icon, Loading, Button, Info } from 'tinper-bee';
+import React, {Component} from 'react';
+import {actions} from 'mirrorx';
+import {Icon, Loading, Button, Info} from 'tinper-bee';
 import Grid from 'components/Grid';
 import Alert from 'components/Alert';
 import FactoryComp from './FactoryComp';
 import SubjectModal from './SubjectModal';
 
 
-import { deepClone, Warning, getPageParam } from "utils";
+import {deepClone, Warning, getPageParam} from "utils";
 
 import 'bee-complex-grid/build/Grid.css';
 import 'bee-pagination/build/Pagination.css'
@@ -34,34 +34,34 @@ class Subject extends Component {
     }
 
     getQuery = (param = {}) => {
-        const { slectedPartId, pid } = this.props;
-        param.search_pid = slectedPartId;
+        const {selectedPartId, pid} = this.props;
+        param.search_pid = selectedPartId;
         actions.quote.loadSubjectList(param); // 查询默认条件
     }
 
 
     onCloseModal = () => {
-        this.setState({ addSubModalVisible: false });
+        this.setState({addSubModalVisible: false});
     }
 
     changeAllData = (field, value, index) => {
-        const { subjectObj } = this.props;
-        const { list } = subjectObj;
+        const {subjectObj} = this.props;
+        const {list} = subjectObj;
         list[index][field] = value;
         subjectObj.list = list;
-        actions.quote.updateState({ subjectObj: subjectObj });
+        actions.quote.updateState({subjectObj: subjectObj});
     }
 
     getSelectedDataFunc = (selectData) => {
-        this.setState({ selectData });
+        this.setState({selectData});
     }
 
     onClickDelConfirm = () => {
-        const { selectData } = this.state;
+        const {selectData} = this.state;
         if (selectData.length === 0) {
             Info('请勾选数据后再删除');
         } else {
-            this.setState({ showPopAlert: true });
+            this.setState({showPopAlert: true});
         }
     }
 
@@ -98,9 +98,9 @@ class Subject extends Component {
      * @param {string} tableName 分页 table 名称
      */
     onPageSelect = (value, type) => {
-        let { subjectObj } = this.props;
-        let { pageIndex, pageSize } = getPageParam(value, type, subjectObj);
-        let param = { pageSize, pageIndex };
+        let {subjectObj} = this.props;
+        let {pageIndex, pageSize} = getPageParam(value, type, subjectObj);
+        let param = {pageSize, pageIndex};
         this.getQuery(param);
     }
 
@@ -150,7 +150,7 @@ class Subject extends Component {
                     // required={true}//必输项
                     record={record}//记录集用于多字段处理
                     onChange={this.changeAllData}//回调函数
-                // onValidate={this.onValidate}//校验的回调
+                    // onValidate={this.onValidate}//校验的回调
                 />
             }
         },
@@ -197,12 +197,12 @@ class Subject extends Component {
     ];
 
     onCheckSubject = () => {
-        this.setState({ addSubModalVisible: true });
+        this.setState({addSubModalVisible: true});
     }
 
     onUpdateSubject = () => {
         const subjectObj = deepClone(this.props.subjectObj);
-        const { list } = subjectObj;
+        const {list} = subjectObj;
         const editSelectData = list.map((item) => {
             item['_checked'] = false;
             item['_status'] = 'edit';
@@ -210,7 +210,7 @@ class Subject extends Component {
             return item;
         })
         subjectObj.list = editSelectData;
-        actions.quote.updateState({ subjectObj: subjectObj });
+        actions.quote.updateState({subjectObj: subjectObj});
     }
 
 
@@ -219,9 +219,10 @@ class Subject extends Component {
         const list = subjectObj.list.filter((item) => {
             return item._status === 'edit';
         })
+        const {pid} = this.props;
         const status = await actions.quote.updateSubject(list);
         if (status) {
-            this.getQuery();
+            actions.quote.getQuotes({id: pid})
         }
     }
 
@@ -232,28 +233,29 @@ class Subject extends Component {
      * @memberof Order
      */
     async confirmDel(type) {
-        this.setState({ showPopAlert: false });
+        this.setState({showPopAlert: false});
         const _this = this;
         if (type === 1) { // 确定
-            const { selectData } = this.state;
-            const { status } = await actions.quote.delSubject(selectData);
+            const {selectData} = this.state;
+            const {status} = await actions.quote.delSubject(selectData);
             if (status) {
-                _this.setState({ selectData: data });
+                _this.setState({selectData: data});
                 _this.getQuery();
             }
         }
-        this.setState({ showPopAlert: false });
+        this.setState({showPopAlert: false});
     }
 
 
     render() {
         const _this = this;
-        const { subjectObj, subjectModalObj, subjectModalLoading, subjectListLoading } = _this.props;
-        const { addSubModalVisible, showPopAlert } = _this.state;
-        const { selectedPartId, pid } = _this.props;
-        const { list = [] } = subjectObj;
+        const {subjectObj, subjectModalObj, subjectModalLoading, subjectListLoading, partObj} = _this.props;
+        const {addSubModalVisible, showPopAlert} = _this.state;
+        const {selectedPartId, pid} = _this.props;
+        const {list = []} = subjectObj;
 
         const btnStatus = list.length ? false : true;
+        const addStatus = partObj.list.length ? false : true;
 
         const paginationObj = {   // 分页
             horizontalPosition: "right",
@@ -278,18 +280,18 @@ class Subject extends Component {
                         <div className="end"><span>税金: 500.00元</span></div>
                     </div>
                     <div className='table-header'>
-                        <Button shape="border" colors="success" size="sm"
-                            onClick={this.onCheckSubject}
+                        <Button shape="border" colors="success" size="sm" disabled={addStatus}
+                                onClick={this.onCheckSubject}
                         >
                             新增项目
                         </Button>
                         <Button shape="border" colors="success" size="sm" className="del-btn" disabled={btnStatus}
-                            onClick={this.onSaveSubject}
+                                onClick={this.onSaveSubject}
                         >
                             保存项目
                         </Button>
                         <Button shape="border" colors="success" size="sm" className="del-btn" disabled={btnStatus}
-                            onClick={this.onUpdateSubject}
+                                onClick={this.onUpdateSubject}
                         >
                             修改项目
                         </Button>
@@ -326,8 +328,8 @@ class Subject extends Component {
                     // draggable={rowEditStatus}
                     // syncHover={rowEditStatus}
                     getSelectedDataFunc={this.getSelectedDataFunc}
-                    emptyText={() => <Icon style={{ "fontSize": "60px" }} type="uf-nodata" />}
-                    loading={{ show: subjectListLoading, loadingType: "line" }}
+                    emptyText={() => <Icon style={{"fontSize": "60px"}} type="uf-nodata"/>}
+                    loading={{show: subjectListLoading, loadingType: "line"}}
                 />
                 <SubjectModal
                     modalVisible={addSubModalVisible}

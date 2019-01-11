@@ -10,7 +10,7 @@ const URL = {
     "SAVE_PART": `${GROBAL_HTTP_CTX}//pm_projectprice_m/savePart`,//添加部位
     "DELETE_PART": `${GROBAL_HTTP_CTX}/pm_projectprice_m/deletePart`,//删除部位
     "ADD_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveWithList`,
-    "UPD_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
+    "UPD_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveBatch`,
     "DEL_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
 }
 

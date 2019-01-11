@@ -22,10 +22,11 @@ class Quote extends Component {
 
     render() {
         const _this = this;
-        const {partObj, quoteIndex, partIndex, quoteList, ppdesignCenter, ppcusaddress, pid} = _this.props;
+        const {ppdesignCenter, ppcusaddress,showLoading} = _this.props;
 
         return (
             <div className="quote">
+                <Loading showBackDrop={true} loadingType="line" show={showLoading} fullScreen={true}/>
                 <div className="pro-info">
                     <Row>
                         <Col md={4} xs={12} sm={12}>
@@ -57,13 +58,13 @@ class Quote extends Component {
                                         ppcusno: ref[0]["refcode"], //  客户编码
                                         ppdesignCenter: ref[0]["desgin_centor"],
                                         ppcusaddress: ref[0]["address"],
-                                        partObj:{
-                                          list:[],
-                                          partVal:''
+                                        partObj: {
+                                            list: [],
+                                            partVal: ''
                                         },
-                                        quoteIndex:-1,
-                                        partIndex:-1,
-                                        pid:''
+                                        quoteIndex: -1,
+                                        partIndex: -1,
+                                        pid: ''
                                     });
                                     actions.quote.getQuotes({id: ref[0].id})
                                 }}
@@ -110,10 +111,10 @@ class Quote extends Component {
                     <Row>
                         <Col md={4} xs={12} sm={12}>
                             <div className="create-name">
-                                <QuoteTable quoteList={quoteList} quoteIndex={quoteIndex}/>
+                                <QuoteTable {...this.props}/>
                             </div>
                             <div className="create-part">
-                                <Part partObj={partObj} pid={pid} partIndex={partIndex}/>
+                                <Part {...this.props}/>
                             </div>
                         </Col>
                         <Col md={8} xs={12} sm={12}>
