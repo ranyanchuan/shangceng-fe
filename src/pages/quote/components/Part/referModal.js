@@ -2,12 +2,19 @@ import React, {Component} from "react";
 import {actions} from "mirrorx";
 import {Button, Table, FormControl, Modal} from "tinper-bee";
 import Grid from "components/Grid";
+import { Warning } from "utils";
 
 import "bee-complex-grid/build/Grid.css";
 import "bee-pagination/build/Pagination.css";
 import "bee-table/build/Table.css";
 
 class ReferModal extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectData: [],
+        }
+    }
     columns = [
         {
             title: "序号",
@@ -33,6 +40,29 @@ class ReferModal extends Component{
         },
     ];
 
+    getSelectedDataFunc = (selectData) => {
+        console.log(selectData)
+        this.setState({selectData});
+    }
+
+    onClose = () => {
+        const {closeModal} = this.props;
+        closeModal()
+    }
+
+    onConfirm = () => {
+        const selectData = this.state;
+        console.log("22222222",this.props)
+        const {partObj:{partVal}, pid} = this.props;
+        console.log(partVal);
+
+        if(selectData.length > 1){
+            Warning("只能参照一个部位");
+            return;
+        }
+        console.log("确认")
+    }
+
     render(){
         const {otherParts,showReferModal,closeModal} = this.props;
         const paginationObj = {
@@ -52,10 +82,10 @@ class ReferModal extends Component{
                     data={otherParts}
                     paginationObj={paginationObj}
                     showFilterMenu={true} //是否显示行过滤菜单
-                    multiSelect={false} //false 单选，默认多选
-                    rowClassName={(record, index, indent) => {
-                        return partIndex === index ? "selected" : "";
-                    }}
+                    multiSelect={true} //false 单选，默认多选
+                    // rowClassName={(record, index, indent) => {
+                    //     return partIndex === index ? "selected" : "";
+                    // }}
                     // onRowClick={(record, index) => {
                     //     console.log(record)
                     //     actions.quote.updateState({partIndex: index, selectedPartId:record.id});
@@ -63,12 +93,12 @@ class ReferModal extends Component{
                     //     const param={search_pid:record.id};
                     //     actions.quote.loadSubjectList(param); // 查询默认条件
                     // }}
-                    getSelectedDataFunc={() => {}}
+                    getSelectedDataFunc={this.getSelectedDataFunc}
                 />
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={this.onClickOK} colors="primary" style={{marginRight: 25}}>确认</Button>
-                <Button onClick={ () => closeModal()} shape="border" >关闭</Button>
+                <Button onClick={this.onConfirm} colors="primary" style={{marginRight: 25}}>确认</Button>
+                <Button onClick={ this.onClose} shape="border" >关闭</Button>
             </Modal.Footer>
         </Modal>
            

@@ -68,6 +68,7 @@ class Part extends Component {
     render() {
         const _this = this;
         const {partObj, partIndex, pid, otherParts} = this.props;
+        debugger;
         console.log("partIndex",partIndex)
         const paginationObj = {
             // 分页
@@ -102,6 +103,7 @@ class Part extends Component {
                             this.setState({
                                 showReferModal: true
                             });
+                            actions.quote.getReferParts();
                         }}
                         disabled = { pid ? false : true }
                     >
@@ -130,7 +132,7 @@ class Part extends Component {
                     }}
                     getSelectedDataFunc={() => {}}
                 />
-               <ReferModal otherParts={otherParts} showReferModal={this.state.showReferModal} closeModal={this.closeModal}/>
+               <ReferModal {...this.props} showReferModal={this.state.showReferModal} closeModal={this.closeModal}/>
             </div>
         );
     }

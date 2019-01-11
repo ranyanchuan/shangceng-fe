@@ -272,7 +272,11 @@ export default {
             const { pid} = getState().quote;
             const res = processData(await api.getParts({id:pid}));
             console.log("getReferParts",res)
+            actions.quote.updateState({
+                otherParts:res.result.data
+            })
         }
 
+        
     }
 };
