@@ -27,6 +27,8 @@ export default {
     name: "quote",
     // 设置当前 Model 所需的初始化 state
     initialState: {
+        designCenter:'',//设计中心
+        projectAddress:'',//项目地址
         showLoading: false,
         quoteIndex:0,
         quoteList:[],
@@ -262,6 +264,12 @@ export default {
         }
     },
     effects: {
+        //获取选中客户所有报价
+        async getQuotes(data,getState){
+            console.log(data)
+            const res = processData(await api.getQuotes(data));
+            console.log(res)
+        },
         //创建报价
         async createQuote(data,getState){
             const quoteList = deepClone(getState().quote.quoteList);

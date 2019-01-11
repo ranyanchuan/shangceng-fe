@@ -35,7 +35,10 @@ class Quote extends Component {
       partObj,
       quoteIndex,
       partIndex,
-      quoteList
+      quoteList,
+      designbCenter,
+      projectAddress
+
     } = _this.props;
 
     return (
@@ -46,7 +49,7 @@ class Quote extends Component {
               客户名称：
               <RefMultipleTableWithInput
                 placeholder="请选择客户"
-                title={"复杂表格参照"}
+                title={"客户列表"}
                 backdrop={true}
                 disabled={false}
                 multiple={false}
@@ -61,8 +64,16 @@ class Quote extends Component {
                 }}
                 matchUrl={`${GROBAL_HTTP_CTX}/common-ref/matchPKRefJSON`}
                 filterUrl={`${GROBAL_HTTP_CTX}/common-ref/filterRefJSON`}
-                valueField={"refpk"}
-                displayField={"{refname}-{refpk}"}
+                valueField={"refname"}
+                displayField={"{refname}"}
+                onSave = {(ref) => {
+                    console.log(ref);
+                    actions.quote.updateState({
+                        designbCenter:ref[0]["desgin_centor"],
+                        projectAddress:ref[0]["address"]
+                    });
+                    actions.quote.getQuotes({id:ref[0].id})
+                }}
               // {...getFieldProps("valueField", {
               //   initialValue: '{"refname":"高级-T3","refpk":"level5"}',
               //   rules: [
@@ -76,11 +87,11 @@ class Quote extends Component {
             </Col>
             <Col md={4} xs={12} sm={12}>
               设计中心：
-              <FormControl readOnly />
+              <FormControl value={designbCenter} readOnly />
             </Col>
             <Col md={4} xs={12} sm={12}>
               项目地址：
-              <FormControl readOnly />
+              <FormControl value={projectAddress} readOnly />
             </Col>
           </Row>
         </div>
