@@ -43,20 +43,18 @@ class Part extends Component {
             }
         },
         {
+            title: "部位名称",
+            dataIndex: "ppPositionName",
+            key: "ppPositionName",
+            width: 150
+        },
+        {
             title: "部位小计",
             dataIndex: "partSubtotal",
             className: 'column-number-right ', // 靠右对齐
             key: "partSubtotal",
             width: 80,
         },
-
-        {
-            title: "部位名称",
-            dataIndex: "partName",
-            key: "partName",
-            width: 150
-        },
-
     ];
 
     close = () => {

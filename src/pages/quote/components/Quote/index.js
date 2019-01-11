@@ -56,6 +56,7 @@ class QuoteTable extends Component {
           onRowClick={(record, index) => {
             console.log(record)
             actions.quote.updateState({ quoteIndex: index }); 
+            actions.quote.getParts({id:record.id})
           }}
         />
       </div>

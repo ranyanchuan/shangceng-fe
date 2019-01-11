@@ -36,10 +36,12 @@ export default {
         ppcusaddress:'', //项目地址
         ppdesignCenter:'',// 设计中心
         
+        pid:'',// 报价主表id
+
         showLoading: false,
-        quoteIndex:0,
+        quoteIndex:-1,
         quoteList:[],
-        partIndex:0,
+        partIndex:-1,
         partObj: {
             list: [],
             partVal: ''
@@ -235,14 +237,29 @@ export default {
                 Warning("请先选择客户");
                 return;
             }
-            const res = await api.saveQuote({ ppcusname, ppcusid, ppcusno, ppcusaddress, ppdesignCenter, ppTotalAmount:0 })
+            const res = processData(await api.saveQuote({ ppcusname, ppcusid, ppcusno, ppcusaddress, ppdesignCenter, ppTotalAmount:0 }))
             console.log(res)
-            if(res.data.success !== "success") {
+            if(res.result.status !== "success") {
                 Warning("用户报价列表获取失败")
                 return;
             };
             actions.quote.updateState({
-                quoteList:res.data.detailMsg.data
+                quoteList:res.result.data
+            })
+        },
+
+        //获取当前报价所包含的部位
+        async getParts(data,getState){
+            const  partObj = deepClone(getState().quote);
+            const res = processData(await api.getParts(data));
+            console.log(res)
+            if(res.result.status !== "success") {
+                Warning("当前报价部位列表获取失败")
+                return;
+            };
+            partObj.list = res.result.data;
+            actions.quote.updateState({
+                partObj
             })
         },
 
@@ -257,16 +274,27 @@ export default {
         },
         //添加部位
         async addPart(data, getState) {
-            const partObj = deepClone(getState().quote.partObj);
-            if (!partObj.partVal) return;
-            partObj.list.push({
-                partName: partObj.partVal,
-                partSubtotal: 0,
-                id: uuid()
-            });
-            partObj.partVal = '';
+            const { ppcusid, ppcusno, pid, partObj} = getState().quote;
+            const _partObj = deepClone(partObj);
+            if (!partObj.partVal) {
+                Warning("请输入部位名称")
+                return;
+            };
+            
+            const res = processData(await api.addPart({
+                cusid:ppcusid,
+                cusCode:ppcusno,
+                pid :pid,
+                ppPositionName:partObj.partVal
+            }))
+            if(res.result.status !== "success") {
+                Warning("添加部位失败")
+                return;
+            };
+            _partObj.list = res.result.data;
+            _partObj.partVal = '';
             actions.quote.updateState({
-                partObj
+                partObj:_partObj
             });
         },
 
