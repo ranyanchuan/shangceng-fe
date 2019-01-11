@@ -36,7 +36,8 @@ class Part extends Component {
                 return (
                     <div className='operation-btn'>
                         <i size='sm' className='uf uf-del' onClick={() => {
-                            actions.quote.deletePart(index)
+                            console.log("删除部位",record)
+                            actions.quote.deletePart(record.id)
                         }}></i>
                     </div>
                 )
@@ -114,8 +115,7 @@ class Part extends Component {
                         return partIndex === index ? "selected" : "";
                     }}
                     onRowClick={(record, index) => {
-                        console.log(record)
-                        actions.quote.updateState({partIndex: index, slectedPartId:record.id});
+                        actions.quote.updateState({partIndex: index, selectedPartId:record.id});
                     }}
                     getSelectedDataFunc={() => {}}
                 />
