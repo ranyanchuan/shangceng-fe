@@ -9,7 +9,7 @@ const URL = {
     "GET_PARTS": `${GROBAL_HTTP_CTX}/pm_projectprice_m/getProjectPart`,//获取部位
     "SAVE_PART": `${GROBAL_HTTP_CTX}//pm_projectprice_m/savePart`,//添加部位
     "DELETE_PART": `${GROBAL_HTTP_CTX}/pm_projectprice_m/deletePart`,//删除部位
-    "ADD_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_m/savePart`,
+    "ADD_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveWithList`,
     "UPD_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
     "DEL_SUBJECT":  `${GROBAL_HTTP_CTX}/quota/subject`,
 }

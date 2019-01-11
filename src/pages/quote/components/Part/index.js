@@ -107,8 +107,8 @@ class Part extends Component {
                         参考其他部位
                     </Button>
                     </div>
-                    
-                   
+
+
                 </div>
                 <Grid
                     rowKey={(r, i) => r.id}
@@ -121,8 +121,8 @@ class Part extends Component {
                         return partIndex === index ? "selected" : "";
                     }}
                     onRowClick={(record, index) => {
-                        console.log("onRowClick")
-                        actions.quote.updateState({partIndex: index, slectedPartId:record.id});
+                        console.log(record)
+                        actions.quote.updateState({partIndex: index, selectedPartId:record.id});
                         // 查询项目
                         const param={search_pid:record.id};
                         actions.quote.loadSubjectList(param); // 查询默认条件
