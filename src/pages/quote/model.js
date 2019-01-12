@@ -105,12 +105,24 @@ export default {
             actions.quote.updateState({showLoading: true});
             const {result} = processData(await api.getQuotes(param));
             const {status, data} = result;
+
             actions.quote.updateState({showLoading: false});
             if (status === 'success' && data.length > 0) {
                 const {quoteIndex} = getState().quote;
                 actions.quote.updateState({quoteMoney: data[quoteIndex]});
+                const {pid: id} = getState().quote;
+                actions.quote.getPartDesc({id});
             }
         },
+
+        //获取选中客户所有报价
+        async getPartDesc(param, getState) {
+            actions.quote.updateState({showPartLoading: true});
+            const {result} = processData(await api.getParts(param));
+            const {data, status} = result;
+            actions.quote.updateState({partList: data, showPartLoading: false});
+        },
+
 
         //创建报价
         async createQuote(param, getState) {
@@ -163,16 +175,12 @@ export default {
 
         //删除部位
         async deletePart(param, getState) {
-            const {selectedPartId, pid} = getState().quote;
-
-            processData(await api.deletePart(param))
-
-            const response = processData(await api.getParts({id: pid}));
-            const {data: partList} = response.result;
-            actions.quote.updateState({
-                partList,
-                partIndex: 0
-            });
+            const {pid} = getState().quote;
+            const {result} = processData(await api.deletePart(param));
+            const {status} = result;
+            if (status === 'success') {
+                actions.quote.getParts({id: pid});
+            }
         },
 
         /**
@@ -262,7 +270,6 @@ export default {
         //获取参考部位
         async getReferParts(param, getState) {
             const {partName, pid} = getState().quote;
-
             const res = processData(await api.getParts({id: pid}));
             actions.quote.updateState({
                 otherParts: res.result.data
