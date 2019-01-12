@@ -109,7 +109,7 @@ export default {
             actions.quote.updateState({showLoading: false});
             if (status === 'success' && data.length > 0) {
                 const {quoteIndex} = getState().quote;
-                actions.quote.updateState({quoteMoney: data[quoteIndex]});
+                actions.quote.updateState({quoteMoney: data[quoteIndex],quoteList:data});
                 const {pid: id} = getState().quote;
                 actions.quote.getPartDesc({id});
             }
