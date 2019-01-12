@@ -22,8 +22,9 @@ class Quote extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: false,
-            selectData: []
+          showModal:false,
+          selectData: {},
+          refQuoteIndex:-1
         };
     }
 
@@ -128,24 +129,22 @@ class Quote extends Component {
     };
 
     onConfirm = () => {
-        const {selectData} = this.state;
-        const {ppcusid} = this.props;
-
-        if (selectData.length == 0 || selectData.length > 1) {
-            return;
-        }
-        this.setState({showModal: false});
+      const { selectData } = this.state;
+      const { ppcusid:custid} = this.props;
+      const {id:mainId} = selectData;
+      this.setState({ showModal:false });
+      if(mainId){
         actions.quote.saveReferQuote({
-            custid: ppcusid,
-            mainId: selectData[0].id
+          custid,
+          mainId
         });
-
+      }
     }
 
     render() {
         const _this = this;
         const {ppdesignCenter, ppcusaddress, showLoading, ohterQuotes, quoteList} = _this.props;
-        const {showModal} = this.state;
+        const {showModal,refQuoteIndex } = this.state;
         const paginationObj = {
             // 分页
             // horizontalPosition: "right",
@@ -221,6 +220,7 @@ class Quote extends Component {
                         </Button>
                         <Button colors="primary" size="sm"
                                 onClick={this.referOtherQuote}
+                                disabled={quoteList.length ? false : true}
                         >
                             参考其他项目报价
                         </Button>
@@ -229,9 +229,8 @@ class Quote extends Component {
                                 disabled={quoteList.length ? false : true}>
                             提交报价
                         </Button>
-                        <Button colors="primary" size="sm" onClick={() => {
-                            _this.printExcel()
-                        }}>
+                        <Button colors="primary" size="sm" disabled={quoteList.length ? false : true}
+                                onClick={() => {_this.printExcel()}}>
                             打印报价
                         </Button>
                     </div>
@@ -252,32 +251,42 @@ class Quote extends Component {
                     </Row>
                 </div>
                 <Modal show={showModal} backdrop={true} onHide={this.onClose}>
-                    <Modal.Header>
-                        <Modal.Title> 其他项目报价 </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Grid
-                            rowKey={(r, i) => r.id}
-                            columns={this.columns}
-                            data={ohterQuotes}
-                            paginationObj={paginationObj}
-                            showFilterMenu={true} //是否显示行过滤菜单
-                            multiSelect={true} //false 单选，默认多选
-                            getSelectedDataFunc={this.getSelectedDataFunc}
-                        />
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                            onClick={this.onConfirm}
-                            colors="primary"
-                            style={{marginRight: 25}}
-                        >
-                            确认
-                        </Button>
-                        <Button onClick={this.onClose} shape="border">
-                            关闭
-                        </Button>
-                    </Modal.Footer>
+                  <Modal.Header>
+                    <Modal.Title> 其他项目报价 </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <Grid
+                      rowKey={(r, i) => r.id}
+                      columns={this.columns}
+                      data={ohterQuotes}
+                      paginationObj={paginationObj}
+                      showFilterMenu={true} //是否显示行过滤菜单
+                      multiSelect={false} //false 单选，默认多选
+                      rowClassName={(record, index, indent) => {
+                        return refQuoteIndex === index ? "selected" : "";
+                      }}
+                      onRowClick={(record, index) => {
+                          console.log(record)
+                          _this.setState({
+                              selectData:record,
+                              refQuoteIndex:index
+                          })
+                      }}
+                    getSelectedDataFunc={() =>{}}
+                    />
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      onClick={this.onConfirm}
+                      colors="primary"
+                      style={{ marginRight: 25 }}
+                    >
+                      确认
+                    </Button>
+                    <Button onClick={this.onClose} shape="border">
+                      关闭
+                    </Button>
+                  </Modal.Footer>
                 </Modal>
             </div>
         );
