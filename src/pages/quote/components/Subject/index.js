@@ -24,6 +24,8 @@ class Subject extends Component {
             addSubModalVisible: false,
             showPopAlert: false,
             selectData: [],
+            totalMoney: 0,
+
         }
     }
 
@@ -45,12 +47,26 @@ class Subject extends Component {
     }
 
     changeAllData = (field, value, index) => {
-        const {subjectObj} = this.props;
+        const subjectObj = deepClone(this.props.subjectObj);
         const {list} = subjectObj;
         list[index][field] = value;
         subjectObj.list = list;
         actions.quote.updateState({subjectObj: subjectObj});
     }
+
+
+    // calPrice = () => {
+    //     let [total, cost, manage, revenue] = [0, 0, 0, 0];
+    //     const subjectObj = deepClone(this.props.subjectObj);
+    //     for (const item in subjectObj) {
+    //         const {ppUnitPrice = 0, ppQuantity = 0} = item;
+    //         cost+=ppUnitPrice*ppQuantity
+    //     }
+    //     manage=cost*0.12;
+    //     revenue=(cost+manage)*0.0351;
+    //     total
+    // }
+
 
     getSelectedDataFunc = (selectData) => {
         this.setState({selectData});
@@ -120,22 +136,6 @@ class Subject extends Component {
             width: 100,
         },
         {
-            title: "单价",
-            dataIndex: "ppUnitPrice",
-            key: "ppUnitPrice",
-            width: 80,
-            className: 'column-number-right ', // 靠右对齐
-            render: (text, record, index) => {
-                return (<span>{(typeof text) === 'number' ? text.toFixed(2) : ""}</span>)
-            }
-        },
-        {
-            title: "单位",
-            dataIndex: "ppUnitEnumValue",
-            key: "ppUnitEnumValue",
-            width: 80,
-        },
-        {
             title: "工程量",
             dataIndex: "ppQuantity",
             key: "ppQuantity",
@@ -155,14 +155,31 @@ class Subject extends Component {
             }
         },
         {
+            title: "单价",
+            dataIndex: "ppUnitPrice",
+            key: "ppUnitPrice",
+            width: 80,
+            className: 'column-number-right ', // 靠右对齐
+            render: (text, record, index) => {
+                return (<span>{(typeof text) === 'number' ? text.toFixed(2) : ""}</span>)
+            }
+        },
+        {
             title: "小计",
             dataIndex: "ppSubtotal",
             key: "ppSubtotal",
             className: 'column-number-right ', // 靠右对齐
             width: 80,
             render: (text, record, index) => {
-                return (<span>{(typeof text) === 'number' ? text.toFixed(2) : ""}</span>)
+                const {ppUnitPrice = 0, ppQuantity = 0} = record;
+                return (<span>{(ppUnitPrice * ppQuantity).toFixed(2)}</span>)
             }
+        },
+        {
+            title: "单位",
+            dataIndex: "ppUnitEnumValue",
+            key: "ppUnitEnumValue",
+            width: 80,
         },
         {
             title: "工业说明",
@@ -220,9 +237,17 @@ class Subject extends Component {
             return item._status === 'edit';
         })
         const status = await actions.quote.updateSubject(list);
-        const {ppcusid}=this.props;
+        const {ppcusid} = this.props;
         if (status) {
-            actions.quote.getQuotes({id: ppcusid})
+            actions.quote.getQuoteDesc({id: ppcusid});
+            const delStatusList = subjectObj.list.map((item) => {
+                delete item['_checked'];
+                delete item['_status'];
+                delete item['_edit'];
+                return item;
+            })
+            subjectObj.list = delStatusList;
+            actions.quote.updateState({subjectObj: subjectObj});
         }
     }
 
@@ -249,13 +274,13 @@ class Subject extends Component {
 
     render() {
         const _this = this;
-        const {subjectObj, subjectModalObj, subjectModalLoading, subjectListLoading, partList} = _this.props;
+        const {subjectObj, subjectModalObj, subjectModalLoading, subjectListLoading, partList, quoteList, quoteMoney} = _this.props;
         const {addSubModalVisible, showPopAlert} = _this.state;
         const {selectedPartId, pid} = _this.props;
         const {list = []} = subjectObj;
-
+        const {quotename, ppTotalAmount, ppmanacost, ppprojectcost, ppTaxCost} = quoteMoney;
         const btnStatus = list.length ? false : true;
-        const addStatus =partList.length ? false : true;
+        const addStatus = partList.length ? false : true;
 
         const paginationObj = {   // 分页
             horizontalPosition: "right",
@@ -273,11 +298,15 @@ class Subject extends Component {
             <div className='subject'>
                 <div className="subject-header">
                     <div className="desc">
-                        <div>第一次报价</div>
-                        <div>总额: <span className="money">11000.00</span>元</div>
-                        <div>工程造价: <span>10000.00</span>元</div>
-                        <div>管理费: <span>500.00</span>元</div>
-                        <div className="end"><span>税金: 500.00元</span></div>
+                        <div>{quotename ? quotename : "第1次报价"}</div>
+                        <div>总额: <span
+                            className="money">{(typeof ppTotalAmount) === 'number' ? ppTotalAmount.toFixed(2) : 0.00}</span>元
+                        </div>
+                        <div>工程造价: <span>{(typeof ppprojectcost) === 'number' ? ppprojectcost.toFixed(2) : 0.00}</span>元
+                        </div>
+                        <div>管理费: <span>{(typeof ppmanacost) === 'number' ? ppmanacost.toFixed(2) : 0.00}</span>元</div>
+                        <div className="end">
+                            <span>税金:{(typeof ppTaxCost) === 'number' ? ppTaxCost.toFixed(2) : 0.00}元</span></div>
                     </div>
                     <div className='table-header'>
                         <Button shape="border" colors="success" size="sm" disabled={addStatus}
@@ -330,6 +359,7 @@ class Subject extends Component {
                     getSelectedDataFunc={this.getSelectedDataFunc}
                     emptyText={() => <Icon style={{"fontSize": "60px"}} type="uf-nodata"/>}
                     loading={{show: subjectListLoading, loadingType: "line"}}
+                    scroll={{y: 400}}
                 />
                 <SubjectModal
                     modalVisible={addSubModalVisible}

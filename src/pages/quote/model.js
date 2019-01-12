@@ -43,14 +43,16 @@ export default {
         quoteIndex: 0,
         quoteList: [],
         partIndex: 0,
-        
-        partList:[],
-        partName:'',
+
+        partList: [],
+        partName: '',
+
+        quoteMoney: {},
 
         subjectListLoading: false,
         subjectObj: {
             list: [],
-            pageIndex: 2,
+            pageIndex: 0,
             pageSize: 10,
             totalPages: 0,
             total: 0,
@@ -82,22 +84,34 @@ export default {
     effects: {
         //获取选中客户所有报价
         async getQuotes(param, getState) {
-            actions.quote.updateState({ showLoading: true });
-            const { result } = processData(await api.getQuotes(param));
-            const { status, data } = result;
-            actions.quote.updateState({ showLoading: false, quoteList: data, quoteIndex: 0 });
-            if (status === 'success' && data.length>0) {
-                const { id } = data[0];
-                actions.quote.updateState({ pid : id });
-                actions.quote.getParts({ id });
+            actions.quote.updateState({showLoading: true});
+            const {result} = processData(await api.getQuotes(param));
+            const {status, data} = result;
+            actions.quote.updateState({showLoading: false, quoteList: data, quoteIndex: 0});
+            if (status === 'success' && data.length > 0) {
+                const {id} = data[0];
+                actions.quote.updateState({pid: id, quoteMoney: data[0]});
+                actions.quote.getParts({id});
             } else {
                 // 如果请求出错,数据初始化
-                const { subjectObj } = getState().quote;
+                const {subjectObj} = getState().quote;
                 const partList = [];
-                actions.quote.updateState({ subjectObj: initStateObj(subjectObj), partList, partIndex: 0 });
+                actions.quote.updateState({subjectObj: initStateObj(subjectObj), partList, partIndex: 0});
             }
-
         },
+
+        //获取选中客户所有报价
+        async getQuoteDesc(param, getState) {
+            actions.quote.updateState({showLoading: true});
+            const {result} = processData(await api.getQuotes(param));
+            const {status, data} = result;
+            actions.quote.updateState({showLoading: false});
+            if (status === 'success' && data.length > 0) {
+                const {quoteIndex} = getState().quote;
+                actions.quote.updateState({quoteMoney: data[quoteIndex]});
+            }
+        },
+
         //创建报价
         async createQuote(param, getState) {
             const {ppcusid:id} = getState().quote;
@@ -107,25 +121,25 @@ export default {
 
         //获取当前报价所包含的部位
         async getParts(param, getState) {
-            actions.quote.updateState({ showPartLoading: true});
-            const { result } = processData(await api.getParts(param));
-            const { data, status } = result;
+            actions.quote.updateState({showPartLoading: true});
+            const {result} = processData(await api.getParts(param));
+            const {data, status} = result;
 
-            actions.quote.updateState({ partList:data, showPartLoading: false, partIndex: 0 });
+            actions.quote.updateState({partList: data, showPartLoading: false, partIndex: 0});
             if (status === 'success' && data.length > 0) {
-                const { id } = data[0];
-                actions.quote.updateState({ selectedPartId: id });
-                actions.quote.loadSubjectList({ search_pid: id });
+                const {id} = data[0];
+                actions.quote.updateState({selectedPartId: id});
+                actions.quote.loadSubjectList({search_pid: id});
             } else {
                 // 如果请求出错,数据初始化
-                const { subjectObj } = getState().quote;
-                actions.quote.updateState({ subjectObj: initStateObj(subjectObj) });
+                const {subjectObj} = getState().quote;
+                actions.quote.updateState({subjectObj: initStateObj(subjectObj)});
             }
         },
 
         //添加部位
         async addPart(param, getState) {
-            const { partName, ppcusid, ppcusno, pid } = param;
+            const {partName, ppcusid, ppcusno, pid} = param;
             const _partName = partName.trim();
             if (!_partName) {
                 Warning("请输入部位名称")
@@ -139,22 +153,22 @@ export default {
                 ppPositionName: _partName
             }))
 
-            const response = processData(await api.getParts({ id: pid }));
-            const {data:partList} = response.result;
+            const response = processData(await api.getParts({id: pid}));
+            const {data: partList} = response.result;
             actions.quote.updateState({
                 partList,
-                partName:''
+                partName: ''
             });
         },
 
         //删除部位
         async deletePart(param, getState) {
-            const { selectedPartId, pid } = getState().quote;
+            const {selectedPartId, pid} = getState().quote;
 
             processData(await api.deletePart(param))
 
-            const response = processData(await api.getParts({ id: pid }));
-            const {data:partList} = response.result;
+            const response = processData(await api.getParts({id: pid}));
+            const {data: partList} = response.result;
             actions.quote.updateState({
                 partList,
                 partIndex: 0
@@ -168,17 +182,17 @@ export default {
          */
         async loadQuotaListModal(param = {}, getState) {
             // 正在加载数据，显示加载 Loading 图标
-            actions.quote.updateState({ subjectModalLoading: true });
-            const { result } = processData(await api.selectQuota(param));  // 调用 getList 请求数据
-            const { data } = result;
-            actions.quote.updateState({ subjectModalLoading: false });
+            actions.quote.updateState({subjectModalLoading: true});
+            const {result} = processData(await api.selectQuota(param));  // 调用 getList 请求数据
+            const {data} = result;
+            actions.quote.updateState({subjectModalLoading: false});
             if (data) {
                 const subjectModalObj = structureObj(data, param);
-                actions.quote.updateState({ subjectModalObj }); // 更新数据和查询条件
+                actions.quote.updateState({subjectModalObj}); // 更新数据和查询条件
             } else {
                 // 如果请求出错,数据初始化
-                const { subjectModalObj } = getState().quote;
-                actions.quote.updateState({ subjectModalObj: initStateObj(subjectModalObj) });
+                const {subjectModalObj} = getState().quote;
+                actions.quote.updateState({subjectModalObj: initStateObj(subjectModalObj)});
             }
         },
 
@@ -189,10 +203,10 @@ export default {
          */
         async addSubject(param = {}, getState) {
             // 正在加载数据，显示加载 Loading 图标
-            actions.quote.updateState({ subjectModalLoading: true, });
-            const { result } = processData(await api.addSubject(param), '添加成功');  // 调用 getList 请求数据
-            const { data = [] } = result;
-            actions.quote.updateState({ subjectModalLoading: false });
+            actions.quote.updateState({subjectModalLoading: true,});
+            const {result} = processData(await api.addSubject(param), '添加成功');  // 调用 getList 请求数据
+            const {data = []} = result;
+            actions.quote.updateState({subjectModalLoading: false});
             return data;
 
         },
@@ -203,10 +217,10 @@ export default {
          */
         async updateSubject(param, getState) {
             // 正在加载数据，显示加载 Loading 图标
-            actions.quote.updateState({ subjectListLoading: true });
-            const { result } = processData(await api.updateSubject(param), '保存成功');  // 调用 getList 请求数据
-            const { status } = result;
-            actions.quote.updateState({ subjectListLoading: false });
+            actions.quote.updateState({subjectListLoading: true});
+            const {result} = processData(await api.updateSubject(param), '保存成功');  // 调用 getList 请求数据
+            const {status} = result;
+            actions.quote.updateState({subjectListLoading: false});
             return status === 'success' ? true : false;
         },
         /**
@@ -216,10 +230,10 @@ export default {
          */
         async delSubject(param, getState) {
             // 正在加载数据，显示加载 Loading 图标
-            actions.quote.updateState({ subjectListLoading: true });
-            const { result } = processData(await api.delSubject(param), '删除成功');  // 调用 getList 请求数据
-            const { status } = result;
-            actions.quote.updateState({ subjectListLoading: false });
+            actions.quote.updateState({subjectListLoading: true});
+            const {result} = processData(await api.delSubject(param), '删除成功');  // 调用 getList 请求数据
+            const {status} = result;
+            actions.quote.updateState({subjectListLoading: false});
             return status === 'success' ? true : false;
         },
 
@@ -231,25 +245,25 @@ export default {
          */
         async loadSubjectList(param = {}, getState) {
             // 正在加载数据，显示加载 Loading 图标
-            actions.quote.updateState({ subjectListLoading: true });
-            const { result } = processData(await api.getQuota(param));  // 调用 getList 请求数据
-            const { data } = result;
-            actions.quote.updateState({ subjectListLoading: false });
+            actions.quote.updateState({subjectListLoading: true});
+            const {result} = processData(await api.getQuota(param));  // 调用 getList 请求数据
+            const {data} = result;
+            actions.quote.updateState({subjectListLoading: false});
             if (data) {
                 const subjectObj = structureObj(data, param);
-                actions.quote.updateState({ subjectObj }); // 更新数据和查询条件
+                actions.quote.updateState({subjectObj}); // 更新数据和查询条件
             } else {
                 // 如果请求出错,数据初始化
-                const { subjectObj } = getState().quote;
-                actions.quote.updateState({ subjectObj: initStateObj(subjectObj) });
+                const {subjectObj} = getState().quote;
+                actions.quote.updateState({subjectObj: initStateObj(subjectObj)});
             }
         },
 
         //获取参考部位
         async getReferParts(param, getState) {
-            const { partName, pid } = getState().quote;
+            const {partName, pid} = getState().quote;
 
-            const res = processData(await api.getParts({ id: pid }));
+            const res = processData(await api.getParts({id: pid}));
             actions.quote.updateState({
                 otherParts: res.result.data
             })
@@ -257,18 +271,18 @@ export default {
 
         //保存参考部位
         async saveReferPart(param, getState) {
-            const {pid:id} = getState().quote;
-            console.log("保存参考部位param",param);
+            const {pid: id} = getState().quote;
+            console.log("保存参考部位param", param);
             const res = processData(await api.saveReferPart(param));
             console.log("保存参考部位res",res)
             actions.quote.getParts({ id });
-            
+
         },
 
         //报价单打印
         async printExcel(param) {
-            let { result } = processData(await api.queryPrintTemplateAllocate(param.queryParams), '');
-            const { data: res } = result;
+            let {result} = processData(await api.queryPrintTemplateAllocate(param.queryParams), '');
+            const {data: res} = result;
             if (!res || !res.res_code) return false;
             await api.printExcel({
                 tenantId: 'tenant',

@@ -55,8 +55,8 @@ class QuoteTable extends Component {
           }}
           scroll={{ y: 200 }}
           onRowClick={(record, index) => {
-            console.log(record)
-            actions.quote.updateState({ quoteIndex: index, pid:record.id });
+
+            actions.quote.updateState({ quoteIndex: index, pid:record.id,quoteMoney:record});
             actions.quote.getParts({id:record.id})
           }}
           // loading={{show: showLoading, loadingType: "line"}}
