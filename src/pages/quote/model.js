@@ -99,27 +99,10 @@ export default {
 
         },
         //创建报价
-        async createQuote(data, getState) {
-            const { ppcusname, ppcusid, ppcusno, ppcusaddress, ppdesignCenter } = getState().quote;
-            if (!ppcusid) {
-                Warning("请先选择客户");
-                return;
-            }
-            const res = processData(await api.saveQuote({
-                ppcusname,
-                ppcusid,
-                ppcusno,
-                ppcusaddress,
-                ppdesignCenter,
-                ppTotalAmount: 0
-            }))
-            if (res.result.status !== "success") {
-                Warning("用户报价列表获取失败")
-                return;
-            }
-            actions.quote.updateState({
-                quoteList: res.result.data
-            })
+        async createQuote(param, getState) {
+            const {ppcusid:id} = getState().quote;
+            processData(await api.saveQuote(param))
+            actions.quote.getQuotes({id})
         },
 
         //获取当前报价所包含的部位
@@ -299,7 +282,7 @@ export default {
         //获取其他项目报价
         async getOtherQuotes(param,getState){
             const {ppcusid:id} = getState().quote;
-            const res = processData(await api.getOtherQuotes(id));
+            const res = processData(await api.getOtherQuotes({id}));
 
             console.log(res);
             const {data:ohterQuotes} = res.result;
