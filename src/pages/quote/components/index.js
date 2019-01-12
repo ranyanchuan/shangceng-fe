@@ -21,10 +21,6 @@ class Quote extends Component {
     }
     // 打印数据
     printExcel = () => {
-        if (!this.state.selectData.length) {
-            Message.create({ content: '请选择需打印的数据', color: 'danger' });
-            return;
-        }
         actions.quote.printExcel({
             queryParams:
             {
