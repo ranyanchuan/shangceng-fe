@@ -1,11 +1,18 @@
 import React, { Component } from "react";
 import { actions } from "mirrorx";
-import { Icon, Loading, Row, Col, Button, FormControl } from "tinper-bee";
+import { Icon, Loading, Row, Col, Button, FormControl, Modal } from "tinper-bee";
 import RefMultipleTableWithInput from "ref-multiple-table";
 
 import QuoteTable from "./Quote";
 import Subject from "./Subject";
 import Part from "./Part";
+
+import Grid from "components/Grid";
+import { Warning } from "utils";
+
+import "bee-complex-grid/build/Grid.css";
+import "bee-pagination/build/Pagination.css";
+import "bee-table/build/Table.css";
 
 import "ref-multiple-table/dist/index.css";
 import "./index.less";
@@ -13,7 +20,10 @@ import "./index.less";
 class Quote extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+          showModal:false,
+          selectData: []
+        };
     }
 
     componentDidMount() {
@@ -33,10 +43,71 @@ class Quote extends Component {
             }
         });
     }
+
+    columns = [
+      {
+        title: "报价名称",
+        dataIndex: "quotename",
+        key: "quotename",
+        width: 100
+      },
+      {
+        title: "报价金额",
+        dataIndex: "ppTotalAmount",
+        key: "ppTotalAmount",
+        width: 100
+      },
+      {
+        title: "状态",
+        dataIndex: "usedFlag",
+        key: "usedFlag",
+        width: 100,
+        render(record, text, index) {
+          return record === "0" ? "未使用" : "已使用";
+        }
+      }
+    ];
+  
+
+    referOtherQuote = () => {
+      this.setState({ showModal:true });
+      actions.quote.getOtherQuotes();
+    }
+
+    getSelectedDataFunc = selectData => {
+      this.setState({ selectData });
+    }
+
+    onClose = () => {
+      this.setState({ showModal:false });
+    };
+
+    onConfirm = () => {
+      const { selectData } = this.state;
+      const { ppcusid} = this.props;
+
+      if (selectData.length == 0 || selectData.length > 1) {
+        return;
+      }
+
+      closeModal();
+      actions.quote.saveReferPart({
+        mainId: pid,
+        positionName: partName,
+        partId: selectData[0].id
+      });
+      this.setState({ showModal:false });
+    }
+
     render() {
         const _this = this;
-        const { ppdesignCenter, ppcusaddress, showLoading } = _this.props;
-
+        const { ppdesignCenter, ppcusaddress, showLoading, ohterQuotes } = _this.props;
+        const {showModal} = this.state;
+        const paginationObj = {
+          // 分页
+          // horizontalPosition: "right",
+          verticalPosition: "none"
+        };
         return (
             <div className="quote">
                 <Loading showBackDrop={true} loadingType="line" show={showLoading} fullScreen={true} />
@@ -105,7 +176,9 @@ class Quote extends Component {
                         >
                             创建报价
                         </Button>
-                        <Button colors="primary" size="sm">
+                        <Button colors="primary" size="sm"
+                            onClick={this.referOtherQuote}
+                        >
                             参考其他项目报价
                         </Button>
                         <Button colors="primary" size="sm">
@@ -131,6 +204,34 @@ class Quote extends Component {
                         </Col>
                     </Row>
                 </div>
+                <Modal show={showModal} backdrop={true} onHide={this.onClose}>
+                  <Modal.Header>
+                    <Modal.Title> 其他项目报价 </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <Grid
+                      rowKey={(r, i) => r.id}
+                      columns={this.columns}
+                      data={ohterQuotes}
+                      paginationObj={paginationObj}
+                      showFilterMenu={true} //是否显示行过滤菜单
+                      multiSelect={true} //false 单选，默认多选
+                      getSelectedDataFunc={this.getSelectedDataFunc}
+                    />
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      onClick={this.onConfirm}
+                      colors="primary"
+                      style={{ marginRight: 25 }}
+                    >
+                      确认
+                    </Button>
+                    <Button onClick={this.onClose} shape="border">
+                      关闭
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
             </div>
         );
     }
