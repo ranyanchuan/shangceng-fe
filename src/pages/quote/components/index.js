@@ -46,6 +46,24 @@ class Quote extends Component {
 
     columns = [
       {
+        title: "客户名称",
+        dataIndex: "ppcusname",
+        key: "ppcusname",
+        width: 100
+      },
+      {
+        title: "设计中心",
+        dataIndex: "ppdesignCenter",
+        key: "ppdesignCenter",
+        width: 100
+      },
+      {
+        title: "项目地址",
+        dataIndex: "ppcusaddress",
+        key: "ppcusaddress",
+        width: 100
+      },
+      {
         title: "报价名称",
         dataIndex: "quotename",
         key: "quotename",
@@ -67,9 +85,28 @@ class Quote extends Component {
         }
       }
     ];
-  
+    
+    createQuote = () => {
+      const { ppcusname, ppcusid, ppcusno, ppcusaddress, ppdesignCenter } = this.props;
+      if (!ppcusid) {
+        Warning("请先选择客户");
+        return;
+      }
+      actions.quote.createQuote({ 
+        ppcusname,
+        ppcusid,
+        ppcusno,
+        ppcusaddress,
+        ppdesignCenter,
+        ppTotalAmount: 0});
+    }
 
     referOtherQuote = () => {
+      const {ppcusid} = this.props;
+      if (!ppcusid) {
+        Warning("请先选择客户");
+        return;
+      }
       this.setState({ showModal:true });
       actions.quote.getOtherQuotes();
     }
@@ -89,14 +126,12 @@ class Quote extends Component {
       if (selectData.length == 0 || selectData.length > 1) {
         return;
       }
-
-      closeModal();
-      actions.quote.saveReferPart({
-        mainId: pid,
-        positionName: partName,
-        partId: selectData[0].id
-      });
       this.setState({ showModal:false });
+      actions.quote.saveReferQuote({
+        custid: ppcusid,
+        mainId: selectData[0].id
+      });
+      
     }
 
     render() {
@@ -172,7 +207,7 @@ class Quote extends Component {
                         <Button
                             colors="primary"
                             size="sm"
-                            onClick={() => actions.quote.createQuote()}
+                            onClick={this.createQuote}
                         >
                             创建报价
                         </Button>
