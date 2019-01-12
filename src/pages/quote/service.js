@@ -12,6 +12,7 @@ const URL = {
     "ADD_SUBJECT": `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveWithList`,
     "UPD_SUBJECT": `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveBatch`,
     "DEL_SUBJECT": `${GROBAL_HTTP_CTX}/pm_projectprice_t1/deleteBatch`,
+    "SAVE_REFER_PART": `${GROBAL_HTTP_CTX}/pm_projectprice_m/refOtherPart`,
 
     // 打印
     "GET_QUERYPRINTTEMPLATEALLOCATE": `/eiap-plus/appResAllocate/queryPrintTemplateAllocate`,
@@ -149,4 +150,15 @@ export const printExcel = (params) => {
     console.log(exportUrl);
     window.open(exportUrl);
 
+}
+
+/**
+ * 保存参考部位
+ * @data {*} data
+ */
+export const saveReferPart = (data) => {
+    return request(URL.SAVE_REFER_PART, {
+        method: "post",
+        data: data
+    })
 }

@@ -113,7 +113,6 @@ export default {
                 ppdesignCenter,
                 ppTotalAmount: 0
             }))
-            console.log(res)
             if (res.result.status !== "success") {
                 Warning("用户报价列表获取失败")
                 return;
@@ -168,7 +167,6 @@ export default {
         //删除部位
         async deletePart(param, getState) {
             const { selectedPartId, pid } = getState().quote;
-            console.log("selectedPartId", selectedPartId)
 
             processData(await api.deletePart(param))
 
@@ -276,7 +274,13 @@ export default {
 
         //保存参考部位
         async saveReferPart(param, getState) {
-            console.log(param)
+            const {pid:id} = getState().quote;
+            console.log("保存参考部位param",param);
+            const res = processData(await api.saveReferPart(param));
+            console.log("保存参考部位res",res)
+debugger
+            actions.quote.getParts({ id });
+            
         },
 
         //报价单打印

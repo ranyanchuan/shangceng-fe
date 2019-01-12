@@ -31,13 +31,13 @@ const proxyConfig = [
     enable: true,
     headers: {
       // 这是之前网页的地址，从中可以看到当前请求页面的链接。
-      "Referer": "http://172.20.53.249:8080"
+      "Referer": "http://172.20.52.242:8080"
     },
     // context，如果不配置，默认就是代理全部。
     router: [
       '/wbalone', '/iuap-example', '/eiap-plus/', '/newref/', '/print_service/', '/iuap-print/'
     ],
-    url: 'http://172.20.53.249:8080'
+    url: 'http://172.20.52.242:8080'
   },
   // 后台开发服务
   {
