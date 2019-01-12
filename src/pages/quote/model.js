@@ -294,7 +294,7 @@ export default {
             await api.printExcel({
                 tenantId: 'tenant',
                 printcode: res.res_code,
-                serverUrl: `${GROBAL_HTTP_CTX}/quote/dataForPrint`,
+                serverUrl: `${GROBAL_HTTP_CTX}/pm_projectprice_m/dataForPrint`,
                 params: encodeURIComponent(JSON.stringify(param.printParams)),
                 sendType: 'post'
             })
