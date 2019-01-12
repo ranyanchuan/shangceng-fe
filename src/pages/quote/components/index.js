@@ -34,6 +34,7 @@ class Quote extends Component {
 
     // 打印数据
     printExcel = () => {
+        const {pid : id} = this.props;
         actions.quote.printExcel({
             queryParams:
                 {
@@ -42,7 +43,7 @@ class Quote extends Component {
                 },
             printParams:
                 {
-                    id: '91d94bfab32d4bb9afac7fa66b1ae4df'
+                    id
                 }
         });
     }
