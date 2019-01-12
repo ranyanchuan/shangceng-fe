@@ -30,8 +30,8 @@ export default class QuotaPaginationTable extends Component {
                 },
                 {
                     title: "单位",
-                    dataIndex: "unit",
-                    key: "unit",
+                    dataIndex: "unitEnumValue",
+                    key: "unitEnumValue",
                     width: 80,
                 },
                 {
@@ -42,8 +42,8 @@ export default class QuotaPaginationTable extends Component {
                 },
                 {
                     title: "类别名称",
-                    dataIndex: "categoryname",
-                    key: "categoryname",
+                    dataIndex: "categorynameEnumValue",
+                    key: "categorynameEnumValue",
                     width: 100,
                 },
                 {
@@ -54,8 +54,8 @@ export default class QuotaPaginationTable extends Component {
                 },
                 {
                     title: "类型",
-                    dataIndex: "category",
-                    key: "category",
+                    dataIndex: "categoryEnumValue",
+                    key: "categoryEnumValue",
                     width: 80,
                 },
                 {

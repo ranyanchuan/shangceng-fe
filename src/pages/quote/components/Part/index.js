@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {actions} from "mirrorx";
-import {Table, FormControl, Modal} from "tinper-bee";
+import React, { Component } from "react";
+import { actions } from "mirrorx";
+import { Table, FormControl, Modal } from "tinper-bee";
 import Button from 'components/Button';
 import Grid from "components/Grid";
 import ReferModal from './referModal'
@@ -16,19 +16,19 @@ class Part extends Component {
     constructor() {
         super();
         this.state = {
-            showReferModal:false
+            showReferModal: false
         };
     }
 
     handPartNameChange = (val) => {
         actions.quote.updateState({
-            partName:val
+            partName: val
         })
     }
 
     addPart = () => {
         const { ppcusid, ppcusno, pid, partName } = this.props;
-        actions.quote.addPart({partName, ppcusid, ppcusno, pid})
+        actions.quote.addPart({ partName, ppcusid, ppcusno, pid })
     }
 
     referOtherParts = () => {
@@ -65,7 +65,7 @@ class Part extends Component {
                     <div className='operation-btn'>
                         <i size='sm' className='uf uf-del' onClick={(e) => {
                             e.stopPropagation()
-                            actions.quote.deletePart({id:record.id})
+                            actions.quote.deletePart({ id: record.id })
                         }}></i>
                     </div>
                 )
@@ -79,9 +79,9 @@ class Part extends Component {
         },
         {
             title: "部位小计",
-            dataIndex: "partSubtotal",
+            dataIndex: "ppCost",
             className: 'column-number-right ', // 靠右对齐
-            key: "partSubtotal",
+            key: "ppCost",
             width: 80,
         },
     ];
@@ -94,7 +94,7 @@ class Part extends Component {
 
     render() {
         const _this = this;
-        const {partList, partIndex, pid, partName } = this.props;
+        const { partList, partIndex, pid, partName } = this.props;
         const paginationObj = {
             // 分页
             // horizontalPosition: "right",
@@ -112,22 +112,22 @@ class Part extends Component {
                         placeholder="请输入部位"
                     />
                     <div>
-                    <Button
-                        colors="primary"
-                        size="sm"
-                        onClick={this.addPart}
-                        disabled = { pid ? false : true }
-                    >
-                        添加
+                        <Button
+                            colors="primary"
+                            size="sm"
+                            onClick={this.addPart}
+                            disabled={pid ? false : true}
+                        >
+                            添加
                     </Button>
-                    <Button
-                        style={{marginRight: 16}}
-                        colors="primary"
-                        size="sm"
-                        onClick={this.referOtherParts}
-                        disabled = { pid ? false : true }
-                    >
-                        参考其他部位
+                        <Button
+                            style={{ marginRight: 16 }}
+                            colors="primary"
+                            size="sm"
+                            onClick={this.referOtherParts}
+                            disabled={pid ? false : true}
+                        >
+                            参考其他部位
                     </Button>
                     </div>
 
@@ -145,14 +145,14 @@ class Part extends Component {
                     }}
                     onRowClick={(record, index) => {
                         console.log(record)
-                        actions.quote.updateState({partIndex: index, selectedPartId:record.id});
+                        actions.quote.updateState({ partIndex: index, selectedPartId: record.id });
                         // 查询项目
-                        const param={search_pid:record.id};
+                        const param = { search_pid: record.id };
                         actions.quote.loadSubjectList(param); // 查询默认条件
                     }}
-                    getSelectedDataFunc={() => {}}
+                    getSelectedDataFunc={() => { }}
                 />
-               <ReferModal {...this.props} showReferModal={this.state.showReferModal} closeModal={this.closeModal}/>
+                <ReferModal {...this.props} showReferModal={this.state.showReferModal} closeModal={this.closeModal} />
             </div>
         );
     }
