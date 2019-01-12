@@ -63,7 +63,7 @@ export default {
             totalPages: 0,
             total: 0,
         },
-
+        ohterQuotes:[],//参照其他项目报价
         otherParts: []//参照其他部位列表
     },
     reducers: {
@@ -296,5 +296,22 @@ export default {
             })
         },
 
+        //获取其他项目报价
+        async getOtherQuotes(param,getState){
+            const {ppcusid:id} = getState().quote;
+            const res = processData(await api.getOtherQuotes(id));
+
+            console.log(res);
+            const {data:ohterQuotes} = res.result;
+            actions.quote.updateState({ohterQuotes})
+        },
+
+         //保存参照项目报价
+         async saveReferQuote(param,getState){
+            const {ppcusid:id} = getState().quote;
+            const res = processData(await api.saveReferQuote(param));
+            console.log(res);
+            actions.quote.getQuotes({id})
+        }
     }
 };

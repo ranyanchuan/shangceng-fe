@@ -17,6 +17,9 @@ const URL = {
     // 打印
     "GET_QUERYPRINTTEMPLATEALLOCATE": `/eiap-plus/appResAllocate/queryPrintTemplateAllocate`,
     "PRINTSERVER": '/print_service/print/preview',
+
+    "GET_OTHER_QUOTES":`${GROBAL_HTTP_CTX}/pm_projectprice_m/getOtherProjectPrice`,
+    "SAVE_REFER_QUOTE":`${GROBAL_HTTP_CTX}/pm_projectprice_m/refOtherQuote`,
 }
 
 /**
@@ -162,3 +165,27 @@ export const saveReferPart = (data) => {
         data: data
     })
 }
+
+/**
+ * 获取其他项目报价
+ * @param {*} params
+ */
+export const getOtherQuotes = (params) => {
+    return request(URL.GET_OTHER_QUOTES, {
+        method: "get",
+        param: params
+    })
+}
+
+
+/**
+ * 保存参考项目报价
+ * @data {*} data
+ */
+export const saveReferQuote = (data) => {
+    return request(URL.SAVE_REFER_QUOTE, {
+        method: "post",
+        data: data
+    })
+}
+
