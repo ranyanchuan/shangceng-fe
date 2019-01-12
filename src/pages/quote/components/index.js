@@ -22,7 +22,8 @@ class Quote extends Component {
         super(props);
         this.state = {
           showModal:false,
-          selectData: []
+          selectData: {},
+          refQuoteIndex:-1
         };
     }
 
@@ -121,23 +122,22 @@ class Quote extends Component {
 
     onConfirm = () => {
       const { selectData } = this.state;
-      const { ppcusid} = this.props;
+      const { ppcusid:custid} = this.props;
+      const {id:mainId} = selectData;
 
-      if (selectData.length == 0 || selectData.length > 1) {
-        return;
-      }
       this.setState({ showModal:false });
-      actions.quote.saveReferQuote({
-        custid: ppcusid,
-        mainId: selectData[0].id
-      });
-      
+      if(mainId){
+        actions.quote.saveReferQuote({
+          custid,
+          mainId
+        });
+      }
     }
 
     render() {
         const _this = this;
         const { ppdesignCenter, ppcusaddress, showLoading, ohterQuotes } = _this.props;
-        const {showModal} = this.state;
+        const {showModal,refQuoteIndex } = this.state;
         const paginationObj = {
           // 分页
           // horizontalPosition: "right",
@@ -250,8 +250,18 @@ class Quote extends Component {
                       data={ohterQuotes}
                       paginationObj={paginationObj}
                       showFilterMenu={true} //是否显示行过滤菜单
-                      multiSelect={true} //false 单选，默认多选
-                      getSelectedDataFunc={this.getSelectedDataFunc}
+                      multiSelect={false} //false 单选，默认多选
+                      rowClassName={(record, index, indent) => {
+                        return refQuoteIndex === index ? "selected" : "";
+                      }}
+                      onRowClick={(record, index) => {
+                          console.log(record)
+                          _this.setState({
+                              selectData:record,
+                              refQuoteIndex:index
+                          })
+                      }}
+                    getSelectedDataFunc={() =>{}}
                     />
                   </Modal.Body>
                   <Modal.Footer>

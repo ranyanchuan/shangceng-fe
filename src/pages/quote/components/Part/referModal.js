@@ -12,7 +12,8 @@ class ReferModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectData: []
+      selectData: {},
+      refPartIndex:-1
     };
   }
   columns = [
@@ -51,22 +52,18 @@ class ReferModal extends Component {
 
   onConfirm = () => {
     const { selectData } = this.state;
-    const { partName, pid, closeModal } = this.props;
-
-    if (selectData.length == 0 || selectData.length > 1) {
-      return;
-    }
-
+    const { partName:positionName, pid:mainId, closeModal } = this.props;
+    const {id:partId} = selectData;
     closeModal();
-    actions.quote.saveReferPart({
-      mainId: pid,
-      positionName: partName,
-      partId: selectData[0].id
-    });
+    if(partId){
+        actions.quote.saveReferPart({mainId, positionName, partId });
+    }
   };
 
   render() {
+      const _this = this;
     const { otherParts, showReferModal } = this.props;
+    const {refPartIndex} = this.state;
     const paginationObj = {
       // 分页
       // horizontalPosition: "right",
@@ -84,18 +81,18 @@ class ReferModal extends Component {
             data={otherParts}
             paginationObj={paginationObj}
             showFilterMenu={true} //是否显示行过滤菜单
-            multiSelect={true} //false 单选，默认多选
-            // rowClassName={(record, index, indent) => {
-            //     return partIndex === index ? "selected" : "";
-            // }}
-            // onRowClick={(record, index) => {
-            //     console.log(record)
-            //     actions.quote.updateState({partIndex: index, selectedPartId:record.id});
-            //     // 查询项目
-            //     const param={search_pid:record.id};
-            //     actions.quote.loadSubjectList(param); // 查询默认条件
-            // }}
-            getSelectedDataFunc={this.getSelectedDataFunc}
+            multiSelect={false} //false 单选，默认多选
+            rowClassName={(record, index, indent) => {
+                return refPartIndex === index ? "selected" : "";
+            }}
+            onRowClick={(record, index) => {
+                console.log(record)
+                _this.setState({
+                    selectData:record,
+                    refPartIndex:index
+                })
+            }}
+            getSelectedDataFunc={() =>{}}
           />
         </Modal.Body>
         <Modal.Footer>
