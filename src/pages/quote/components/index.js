@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {actions} from "mirrorx";
-import {Icon, Loading, Row, Col, Button, FormControl} from "tinper-bee";
+import React, { Component } from "react";
+import { actions } from "mirrorx";
+import { Icon, Loading, Row, Col, Button, FormControl } from "tinper-bee";
 import RefMultipleTableWithInput from "ref-multiple-table";
 
 import QuoteTable from "./Quote";
@@ -19,14 +19,31 @@ class Quote extends Component {
     componentDidMount() {
         // actions.query.loadList(this.props.queryParam); // 查询默认条件
     }
-
+    // 打印数据
+    printExcel = () => {
+        if (!this.state.selectData.length) {
+            Message.create({ content: '请选择需打印的数据', color: 'danger' });
+            return;
+        }
+        actions.quote.printExcel({
+            queryParams:
+            {
+                funccode: 'quote',
+                nodekey: '003'
+            },
+            printParams:
+            {
+                id: '91d94bfab32d4bb9afac7fa66b1ae4df'
+            }
+        });
+    }
     render() {
         const _this = this;
-        const {ppdesignCenter, ppcusaddress,showLoading} = _this.props;
+        const { ppdesignCenter, ppcusaddress, showLoading } = _this.props;
 
         return (
             <div className="quote">
-                <Loading showBackDrop={true} loadingType="line" show={showLoading} fullScreen={true}/>
+                <Loading showBackDrop={true} loadingType="line" show={showLoading} fullScreen={true} />
                 <div className="pro-info">
                     <Row>
                         <Col md={4} xs={12} sm={12}>
@@ -66,26 +83,26 @@ class Quote extends Component {
                                         partIndex: -1,
                                         pid: ''
                                     });
-                                    actions.quote.getQuotes({id: ref[0].id})
+                                    actions.quote.getQuotes({ id: ref[0].id })
                                 }}
-                                // {...getFieldProps("valueField", {
-                                //   initialValue: '{"refname":"高级-T3","refpk":"level5"}',
-                                //   rules: [
-                                //     {
-                                //       message: "请输入姓名",
-                                //       pattern: /[^{"refname":"","refpk":""}|{"refpk":"","refname":""}]/
-                                //     }
-                                //   ]
-                                // })}
+                            // {...getFieldProps("valueField", {
+                            //   initialValue: '{"refname":"高级-T3","refpk":"level5"}',
+                            //   rules: [
+                            //     {
+                            //       message: "请输入姓名",
+                            //       pattern: /[^{"refname":"","refpk":""}|{"refpk":"","refname":""}]/
+                            //     }
+                            //   ]
+                            // })}
                             />
                         </Col>
                         <Col md={4} xs={12} sm={12}>
                             设计中心：
-                            <FormControl value={ppdesignCenter} readOnly/>
+                            <FormControl value={ppdesignCenter} readOnly />
                         </Col>
                         <Col md={4} xs={12} sm={12}>
                             项目地址：
-                            <FormControl value={ppcusaddress} readOnly/>
+                            <FormControl value={ppcusaddress} readOnly />
                         </Col>
                     </Row>
                 </div>
@@ -104,22 +121,22 @@ class Quote extends Component {
                         <Button colors="primary" size="sm">
                             提交报价
                         </Button>
-                        <Button colors="primary" size="sm">
+                        <Button colors="primary" size="sm" onClick={() => { _this.printExcel() }}>
                             打印报价
                         </Button>
                     </div>
                     <Row>
                         <Col md={4} xs={12} sm={12}>
                             <div className="create-name">
-                                <QuoteTable {...this.props}/>
+                                <QuoteTable {...this.props} />
                             </div>
                             <div className="create-part">
-                                <Part {...this.props}/>
+                                <Part {...this.props} />
                             </div>
                         </Col>
                         <Col md={8} xs={12} sm={12}>
                             <div className="create-project">
-                                <Subject {...this.props}/>
+                                <Subject {...this.props} />
                             </div>
                         </Col>
                     </Row>

@@ -3,15 +3,19 @@ import request from "utils/request";
 const URL = {
     "GET_DETAIL": `${GROBAL_HTTP_CTX}/quota/list`,
     "GET_QUOTES": `${GROBAL_HTTP_CTX}/pm_projectprice_m/getProjectPrice`,
-    "SEL_QUOTA":  `${GROBAL_HTTP_CTX}/quota/list`,
-    "GET_QUOTA":  `${GROBAL_HTTP_CTX}//pm_projectprice_t1/list`,
+    "SEL_QUOTA": `${GROBAL_HTTP_CTX}/quota/list`,
+    "GET_QUOTA": `${GROBAL_HTTP_CTX}//pm_projectprice_t1/list`,
     "SAVE_QUOTE": `${GROBAL_HTTP_CTX}/pm_projectprice_m/save`,//保存报价
     "GET_PARTS": `${GROBAL_HTTP_CTX}/pm_projectprice_m/getProjectPart`,//获取部位
     "SAVE_PART": `${GROBAL_HTTP_CTX}//pm_projectprice_m/savePart`,//添加部位
     "DELETE_PART": `${GROBAL_HTTP_CTX}/pm_projectprice_m/deletePart`,//删除部位
-    "ADD_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveWithList`,
-    "UPD_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveBatch`,
-    "DEL_SUBJECT":  `${GROBAL_HTTP_CTX}/pm_projectprice_t1/deleteBatch`,
+    "ADD_SUBJECT": `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveWithList`,
+    "UPD_SUBJECT": `${GROBAL_HTTP_CTX}/pm_projectprice_t1/saveBatch`,
+    "DEL_SUBJECT": `${GROBAL_HTTP_CTX}/pm_projectprice_t1/deleteBatch`,
+
+    // 打印
+    "GET_QUERYPRINTTEMPLATEALLOCATE": `/eiap-plus/appResAllocate/queryPrintTemplateAllocate`,
+    "PRINTSERVER": '/print_service/print/preview',
 }
 
 /**
@@ -42,7 +46,7 @@ export const getQuota = (param) => {
 export const addSubject = (param) => {
     return request(URL.ADD_SUBJECT, {
         method: "post",
-        data:param
+        data: param
     });
 }
 
@@ -53,7 +57,7 @@ export const addSubject = (param) => {
 export const updateSubject = (param) => {
     return request(URL.UPD_SUBJECT, {
         method: "post",
-        data:param
+        data: param
     });
 }
 
@@ -65,7 +69,7 @@ export const updateSubject = (param) => {
 export const delSubject = (param) => {
     return request(URL.DEL_SUBJECT, {
         method: "post",
-        data:param
+        data: param
     });
 }
 
@@ -75,9 +79,9 @@ export const delSubject = (param) => {
  * @param {*} params
  */
 export const getQuotes = (params) => {
-    return request(URL.GET_QUOTES,{
+    return request(URL.GET_QUOTES, {
         method: "get",
-        param:params
+        param: params
     })
 }
 
@@ -86,9 +90,9 @@ export const getQuotes = (params) => {
  * @data {*} data
  */
 export const saveQuote = (data) => {
-    return request(URL.SAVE_QUOTE,{
+    return request(URL.SAVE_QUOTE, {
         method: "post",
-        data:data
+        data: data
     })
 }
 
@@ -97,9 +101,9 @@ export const saveQuote = (data) => {
  * @param {*} params
  */
 export const getParts = (params) => {
-    return request(URL.GET_PARTS,{
+    return request(URL.GET_PARTS, {
         method: "get",
-        param:params
+        param: params
     })
 }
 
@@ -108,9 +112,9 @@ export const getParts = (params) => {
  * @data {*} data
  */
 export const savePart = (data) => {
-    return request(URL.SAVE_PART,{
+    return request(URL.SAVE_PART, {
         method: "post",
-        data:data
+        data: data
     })
 }
 
@@ -119,8 +123,30 @@ export const savePart = (data) => {
  * @data {*} data
  */
 export const deletePart = (data) => {
-    return request(URL.DELETE_PART,{
+    return request(URL.DELETE_PART, {
         method: "post",
-        data:data
+        data: data
     })
+}
+
+// 打印
+
+export const queryPrintTemplateAllocate = (params) => {
+    return request(URL.GET_QUERYPRINTTEMPLATEALLOCATE, {
+        method: "get",
+        param: params
+    });
+
+}
+
+export const printExcel = (params) => {
+
+    let search = [];
+    for (let key in params) {
+        search.push(`${key}=${params[key]}`)
+    }
+    let exportUrl = `${URL.PRINTSERVER}?${search.join('&')}`;
+    console.log(exportUrl);
+    window.open(exportUrl);
+
 }
