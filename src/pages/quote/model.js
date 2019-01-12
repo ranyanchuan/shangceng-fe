@@ -278,7 +278,6 @@ export default {
             console.log("保存参考部位param",param);
             const res = processData(await api.saveReferPart(param));
             console.log("保存参考部位res",res)
-debugger
             actions.quote.getParts({ id });
             
         },

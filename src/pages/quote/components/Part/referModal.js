@@ -51,13 +51,13 @@ class ReferModal extends Component{
 
     onConfirm = () => {
         const {selectData} = this.state;
-        const {partName, pid} = this.props;
+        const {partName, pid, closeModal} = this.props;
 
         if(selectData.length == 0 || selectData.length > 1){
             return;
         }
 
-        console.log("确认")
+        closeModal();
         actions.quote.saveReferPart({
             mainId:pid,
             positionName:partName,
@@ -66,7 +66,7 @@ class ReferModal extends Component{
     }
 
     render(){
-        const {otherParts,showReferModal,closeModal} = this.props;
+        const {otherParts,showReferModal} = this.props;
         const paginationObj = {
             // 分页
             // horizontalPosition: "right",
