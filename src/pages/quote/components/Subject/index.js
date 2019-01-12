@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {actions} from 'mirrorx';
-import {Icon, Loading, Button, Info} from 'tinper-bee';
+import {Icon, Loading, Info} from 'tinper-bee';
+import Button from 'components/Button';
 import Grid from 'components/Grid';
 import Alert from 'components/Alert';
 import FactoryComp from './FactoryComp';
@@ -16,8 +17,6 @@ import 'bee-input-number/build/InputNumber.css';
 import './index.less';
 
 class Subject extends Component {
-
-
     constructor(props) {
         super(props);
         this.state = {
@@ -193,23 +192,24 @@ class Subject extends Component {
             dataIndex: "ppComputeMethod",
             key: "ppComputeMethod",
             width: 400,
-        }, {
-            title: "操作",
-            dataIndex: "action",
-            key: "action",
-            fixed: "right",
-            width: 55,
-            render(text, record, index) {
-                const _this = this;
-                return (
-                    <div className='operation-btn'>
-                        <i size='sm' className='uf uf-del' onClick={() => {
-                            _this.onClickCell(record)
-                        }}></i>
-                    </div>
-                )
-            }
         },
+        // {
+        //     title: "操作",
+        //     dataIndex: "action",
+        //     key: "action",
+        //     fixed: "right",
+        //     width: 55,
+        //     render(text, record, index) {
+        //         const _this = this;
+        //         return (
+        //             <div className='operation-btn'>
+        //                 <i size='sm' className='uf uf-del' onClick={() => {
+        //                     _this.onClickCell(record)
+        //                 }}></i>
+        //             </div>
+        //         )
+        //     }
+        // },
 
     ];
 
@@ -309,24 +309,26 @@ class Subject extends Component {
                             <span>税金:{(typeof ppTaxCost) === 'number' ? ppTaxCost.toFixed(2) : 0.00}元</span></div>
                     </div>
                     <div className='table-header'>
-                        <Button shape="border" colors="success" size="sm" disabled={addStatus}
+                        <Button  size="sm" disabled={addStatus}
+                                 iconType="uf-plus"
                                 onClick={this.onCheckSubject}
                         >
                             新增项目
                         </Button>
-                        <Button shape="border" colors="success" size="sm" className="del-btn" disabled={btnStatus}
+                        <Button size="sm" className="del-btn" disabled={btnStatus}
+                                iconType="uf-correct"
                                 onClick={this.onSaveSubject}
                         >
                             保存项目
                         </Button>
-                        <Button shape="border" colors="success" size="sm" className="del-btn" disabled={btnStatus}
+                        <Button  size="sm" className="del-btn" disabled={btnStatus}
+                                 iconType="uf-pencil"
                                 onClick={this.onUpdateSubject}
                         >
                             修改项目
                         </Button>
                         <Button
-                            shape="border"
-                            colors="danger"
+                            iconType="uf-del"
                             size="sm"
                             className="del-btn"
                             disabled={btnStatus}

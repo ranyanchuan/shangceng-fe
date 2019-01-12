@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {actions} from "mirrorx";
-import {Button, Table, FormControl, Modal} from "tinper-bee";
+import {Table, FormControl, Modal} from "tinper-bee";
+import Button from 'components/Button';
 import Grid from "components/Grid";
 import ReferModal from './referModal'
 import { Warning } from "utils";

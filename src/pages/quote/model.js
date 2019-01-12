@@ -65,7 +65,7 @@ export default {
             totalPages: 0,
             total: 0,
         },
-        ohterQuotes:[],//参照其他项目报价
+        ohterQuotes: [],//参照其他项目报价
         otherParts: []//参照其他部位列表
     },
     reducers: {
@@ -114,7 +114,7 @@ export default {
 
         //创建报价
         async createQuote(param, getState) {
-            const {ppcusid:id} = getState().quote;
+            const {ppcusid: id} = getState().quote;
             processData(await api.saveQuote(param))
             actions.quote.getQuotes({id})
         },
@@ -274,8 +274,8 @@ export default {
             const {pid: id} = getState().quote;
             console.log("保存参考部位param", param);
             const res = processData(await api.saveReferPart(param));
-            console.log("保存参考部位res",res)
-            actions.quote.getParts({ id });
+            console.log("保存参考部位res", res)
+            actions.quote.getParts({id});
 
         },
 
@@ -294,21 +294,35 @@ export default {
         },
 
         //获取其他项目报价
-        async getOtherQuotes(param,getState){
-            const {ppcusid:id} = getState().quote;
+        async getOtherQuotes(param, getState) {
+            const {ppcusid: id} = getState().quote;
             const res = processData(await api.getOtherQuotes({id}));
 
             console.log(res);
-            const {data:ohterQuotes} = res.result;
+            const {data: ohterQuotes} = res.result;
             actions.quote.updateState({ohterQuotes})
         },
 
-         //保存参照项目报价
-         async saveReferQuote(param,getState){
-            const {ppcusid:id} = getState().quote;
+        //保存参照项目报价
+        async saveReferQuote(param, getState) {
+            const {ppcusid: id} = getState().quote;
             const res = processData(await api.saveReferQuote(param));
             console.log(res);
             actions.quote.getQuotes({id})
+        },
+
+        //保存参照项目报价
+        async submitPrice(param, getState) {
+            const {pid, quoteList, quoteIndex} = getState().quote;
+            actions.quote.updateState({showLoading: true});
+            const {result} = processData(await api.submitPrice({id: pid}), '提交保存成功');
+            actions.quote.updateState({showLoading: false});
+            const {status} = result;
+            if (status === "success") {
+                quoteList[quoteIndex]['usedFlag'] = "1";
+                actions.quote.updateState({quoteList});
+            }
+
         }
     }
 };
