@@ -51,22 +51,16 @@ class ReferModal extends Component{
 
     onConfirm = () => {
         const {selectData} = this.state;
-        const {partObj:{partVal}, pid} = this.props;
-        console.log("partVal",partVal);
+        const {partName, pid} = this.props;
 
-        if(selectData.length == 0){
-            Warning("未选择参照部位");
+        if(selectData.length == 0 || selectData.length > 1){
             return;
         }
 
-        if(selectData.length > 1){
-            Warning("只能参照一个部位");
-            return;
-        }
         console.log("确认")
         actions.quote.saveReferPart({
             mainId:pid,
-            positionName:partVal,
+            positionName:partName,
             partId:selectData[0].id
         })
     }

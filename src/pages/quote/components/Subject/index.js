@@ -249,13 +249,13 @@ class Subject extends Component {
 
     render() {
         const _this = this;
-        const {subjectObj, subjectModalObj, subjectModalLoading, subjectListLoading, partObj} = _this.props;
+        const {subjectObj, subjectModalObj, subjectModalLoading, subjectListLoading, partList} = _this.props;
         const {addSubModalVisible, showPopAlert} = _this.state;
         const {selectedPartId, pid} = _this.props;
         const {list = []} = subjectObj;
 
         const btnStatus = list.length ? false : true;
-        const addStatus = partObj.list.length ? false : true;
+        const addStatus =partList.length ? false : true;
 
         const paginationObj = {   // 分页
             horizontalPosition: "right",

@@ -44,10 +44,8 @@ export default {
         quoteList: [],
         partIndex: 0,
         
-        partObj: {
-            list: [],
-            partVal: ''
-        },
+        partList:[],
+        partName:'',
 
         subjectListLoading: false,
         subjectObj: {
@@ -95,8 +93,8 @@ export default {
             } else {
                 // 如果请求出错,数据初始化
                 const { subjectObj } = getState().quote;
-                const partObj = { list: [], partVal: "" };
-                actions.quote.updateState({ subjectObj: initStateObj(subjectObj), partObj, partIndex: 0 });
+                const partList = [];
+                actions.quote.updateState({ subjectObj: initStateObj(subjectObj), partList, partIndex: 0 });
             }
 
         },
@@ -128,12 +126,11 @@ export default {
         //获取当前报价所包含的部位
         async getParts(param, getState) {
             actions.quote.updateState({ showPartLoading: true});
-            const { partObj } = deepClone(getState().quote);
             const { result } = processData(await api.getParts(param));
             const { data, status } = result;
-            partObj.list = result.data;
-            actions.quote.updateState({ partObj, showPartLoading: false, partIndex: 0 });
-            if (status === 'success' && data.length) {
+
+            actions.quote.updateState({ partList:data, showPartLoading: false, partIndex: 0 });
+            if (status === 'success' && data.length > 0) {
                 const { id } = data[0];
                 actions.quote.updateState({ selectedPartId: id });
                 actions.quote.loadSubjectList({ search_pid: id });
@@ -142,62 +139,46 @@ export default {
                 const { subjectObj } = getState().quote;
                 actions.quote.updateState({ subjectObj: initStateObj(subjectObj) });
             }
-
         },
 
-        //部位输入框
-        async partValChange(data, getState) {
-            const partObj = deepClone(getState().quote.partObj);
-            partObj.partVal = data.trim();
-            actions.quote.updateState({
-                partObj
-            });
-
-        },
         //添加部位
-        async addPart(data, getState) {
-            const { ppcusid, ppcusno, pid, partObj } = getState().quote;
-            debugger;
-            const _partObj = deepClone(partObj);
-            if (!partObj.partVal) {
+        async addPart(param, getState) {
+            const { partName, ppcusid, ppcusno, pid } = param;
+            const _partName = partName.trim();
+            if (!_partName) {
                 Warning("请输入部位名称")
                 return;
             }
 
-            const res = processData(await api.savePart({
+            processData(await api.savePart({
                 cusid: ppcusid,
                 cusCode: ppcusno,
                 pid: pid,
-                ppPositionName: partObj.partVal
+                ppPositionName: _partName
             }))
 
             const response = processData(await api.getParts({ id: pid }));
-
-            _partObj.list = response.result.data;
-            _partObj.partVal = '';
-            
+            const {data:partList} = response.result;
             actions.quote.updateState({
-                partObj: _partObj
+                partList,
+                partName:''
             });
         },
 
         //删除部位
-        async deletePart(data, getState) {
-            const { selectedPartId, pid, partObj } = getState().quote;
-            const _partObj = deepClone(partObj);
+        async deletePart(param, getState) {
+            const { selectedPartId, pid } = getState().quote;
             console.log("selectedPartId", selectedPartId)
 
-            await api.deletePart({ id: data })
+            processData(await api.deletePart(param))
 
             const response = processData(await api.getParts({ id: pid }));
-
-            _partObj.list = response.result.data;
+            const {data:partList} = response.result;
             actions.quote.updateState({
-                partObj: _partObj,
+                partList,
                 partIndex: 0
             });
         },
-
 
         /**
          * 加载列表数据
@@ -285,7 +266,8 @@ export default {
 
         //获取参考部位
         async getReferParts(param, getState) {
-            const { pid } = getState().quote;
+            const { partName, pid } = getState().quote;
+
             const res = processData(await api.getParts({ id: pid }));
             actions.quote.updateState({
                 otherParts: res.result.data

@@ -3,6 +3,8 @@ import {actions} from "mirrorx";
 import {Button, Table, FormControl, Modal} from "tinper-bee";
 import Grid from "components/Grid";
 import ReferModal from './referModal'
+import { Warning } from "utils";
+
 
 import "bee-complex-grid/build/Grid.css";
 import "bee-pagination/build/Pagination.css";
@@ -17,7 +19,32 @@ class Part extends Component {
         };
     }
 
-    columns1 = [
+    handPartNameChange = (val) => {
+        actions.quote.updateState({
+            partName:val
+        })
+    }
+
+    addPart = () => {
+        const { ppcusid, ppcusno, pid, partName } = this.props;
+        actions.quote.addPart({partName, ppcusid, ppcusno, pid})
+    }
+
+    referOtherParts = () => {
+        const { partName } = this.props;
+        const _partName = partName.trim();
+        if (!_partName) {
+            Warning("请输入部位名称")
+            return;
+        }
+
+        this.setState({
+            showReferModal: true
+        });
+        actions.quote.getReferParts();
+    }
+
+    columns = [
         {
             title: "序号",
             dataIndex: "index",
@@ -36,9 +63,8 @@ class Part extends Component {
                 return (
                     <div className='operation-btn'>
                         <i size='sm' className='uf uf-del' onClick={(e) => {
-                            console.log("删除部位",record)
                             e.stopPropagation()
-                            actions.quote.deletePart(record.id)
+                            actions.quote.deletePart({id:record.id})
                         }}></i>
                     </div>
                 )
@@ -67,7 +93,7 @@ class Part extends Component {
 
     render() {
         const _this = this;
-        const {partObj, partIndex, pid} = this.props;
+        const {partList, partIndex, pid, partName } = this.props;
         const paginationObj = {
             // 分页
             // horizontalPosition: "right",
@@ -80,15 +106,15 @@ class Part extends Component {
                 <div className="operate">
                     <FormControl
                         className="partVal"
-                        value={partObj.partVal}
-                        onChange={actions.quote.partValChange}
+                        value={partName}
+                        onChange={this.handPartNameChange}
                         placeholder="请输入部位"
                     />
                     <div>
                     <Button
                         colors="primary"
                         size="sm"
-                        onClick={() => actions.quote.addPart()}
+                        onClick={this.addPart}
                         disabled = { pid ? false : true }
                     >
                         添加
@@ -97,13 +123,8 @@ class Part extends Component {
                         style={{marginRight: 16}}
                         colors="primary"
                         size="sm"
-                        onClick={() => {
-                            this.setState({
-                                showReferModal: true
-                            });
-                            actions.quote.getReferParts();
-                        }}
-                        disabled = { partObj.partVal ? false : true }
+                        onClick={this.referOtherParts}
+                        disabled = { pid ? false : true }
                     >
                         参考其他部位
                     </Button>
@@ -113,8 +134,8 @@ class Part extends Component {
                 </div>
                 <Grid
                     rowKey={(r, i) => r.id}
-                    columns={this.columns1}
-                    data={partObj.list}
+                    columns={this.columns}
+                    data={partList}
                     paginationObj={paginationObj}
                     showFilterMenu={true} //是否显示行过滤菜单
                     multiSelect={false} //false 单选，默认多选

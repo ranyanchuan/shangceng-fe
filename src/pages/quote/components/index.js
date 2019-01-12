@@ -71,10 +71,7 @@ class Quote extends Component {
                                         ppcusno: ref[0]["refcode"], //  客户编码
                                         ppdesignCenter: ref[0]["desgin_centor"],
                                         ppcusaddress: ref[0]["address"],
-                                        partObj: {
-                                            list: [],
-                                            partVal: ''
-                                        }
+                                        partList:[]
                                     });
                                     actions.quote.getQuotes({ id: ref[0].id })
                                 }}
