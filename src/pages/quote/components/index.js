@@ -74,10 +74,7 @@ class Quote extends Component {
                                         partObj: {
                                             list: [],
                                             partVal: ''
-                                        },
-                                        quoteIndex: -1,
-                                        partIndex: -1,
-                                        pid: ''
+                                        }
                                     });
                                     actions.quote.getQuotes({ id: ref[0].id })
                                 }}

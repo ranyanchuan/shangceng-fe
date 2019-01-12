@@ -43,6 +43,7 @@ export default {
         quoteIndex: 0,
         quoteList: [],
         partIndex: 0,
+        
         partObj: {
             list: [],
             partVal: ''
@@ -87,8 +88,9 @@ export default {
             const { result } = processData(await api.getQuotes(param));
             const { status, data } = result;
             actions.quote.updateState({ showLoading: false, quoteList: data, quoteIndex: 0 });
-            if (status === 'success' && data.length) {
+            if (status === 'success' && data.length>0) {
                 const { id } = data[0];
+                actions.quote.updateState({ pid : id });
                 actions.quote.getParts({ id });
             } else {
                 // 如果请求出错,数据初始化
@@ -125,8 +127,7 @@ export default {
 
         //获取当前报价所包含的部位
         async getParts(param, getState) {
-            const { id: pid } = param;
-            actions.quote.updateState({ showPartLoading: true, pid });
+            actions.quote.updateState({ showPartLoading: true});
             const { partObj } = deepClone(getState().quote);
             const { result } = processData(await api.getParts(param));
             const { data, status } = result;
@@ -156,12 +157,12 @@ export default {
         //添加部位
         async addPart(data, getState) {
             const { ppcusid, ppcusno, pid, partObj } = getState().quote;
+            debugger;
             const _partObj = deepClone(partObj);
             if (!partObj.partVal) {
                 Warning("请输入部位名称")
                 return;
             }
-
 
             const res = processData(await api.savePart({
                 cusid: ppcusid,
@@ -170,16 +171,11 @@ export default {
                 ppPositionName: partObj.partVal
             }))
 
-            if (res.result.status !== "success") {
-                Warning("添加部位失败")
-                return;
-            }
-
-            console.log(pid)
             const response = processData(await api.getParts({ id: pid }));
-            console.log(response)
+
             _partObj.list = response.result.data;
             _partObj.partVal = '';
+            
             actions.quote.updateState({
                 partObj: _partObj
             });
@@ -190,10 +186,11 @@ export default {
             const { selectedPartId, pid, partObj } = getState().quote;
             const _partObj = deepClone(partObj);
             console.log("selectedPartId", selectedPartId)
-            const res = processData(await api.deletePart({ id: data }))
-            console.log("res169", res)
+
+            await api.deletePart({ id: data })
+
             const response = processData(await api.getParts({ id: pid }));
-            console.log(response)
+
             _partObj.list = response.result.data;
             actions.quote.updateState({
                 partObj: _partObj,
@@ -299,6 +296,8 @@ export default {
         async saveReferPart(param, getState) {
             console.log(param)
         },
+
+        //报价单打印
         async printExcel(param) {
             let { result } = processData(await api.queryPrintTemplateAllocate(param.queryParams), '');
             const { data: res } = result;

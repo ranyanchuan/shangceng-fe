@@ -79,7 +79,7 @@ class ReferModal extends Component{
             verticalPosition: "none"
         };
         return(
-            <Modal show={showReferModal} backdrop={true} onHide={this.close}>
+            <Modal show={showReferModal} backdrop={true} onHide={this.onClose}>
             <Modal.Header closeButton>
                 <Modal.Title> 其他所有部位 </Modal.Title>
             </Modal.Header>
